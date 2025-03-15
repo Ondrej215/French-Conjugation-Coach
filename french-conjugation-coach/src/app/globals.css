@@ -1,5 +1,12 @@
 @import "tailwindcss";
 
+/*git add .
+  git commit -m ""
+  git push origin main
+  
+  cd --
+  npm run dev*/
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
