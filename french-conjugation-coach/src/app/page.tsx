@@ -56,6 +56,7 @@ export default function Home() {
   // Alerts all data from the infinitives database
   const alertAllData = () => {
     alert(JSON.stringify(allData));
+    console.log(allData)
   }
 
   const getConjugation = (pronounConjugation: string, tenseID: number, infinitiveID: number) => {
@@ -242,6 +243,9 @@ export default function Home() {
       }
       else{
         conjugation = getConjugation(selectedPronoun, 1, infinitiveData.infinitive_id);
+        if (selectedTense == "Imperative"){
+          conjugation = conjugation.slice(0, -1)
+        }
       }
     }else if (conjugationTense == "Imperfect"){
       // regular groups in imperfect
