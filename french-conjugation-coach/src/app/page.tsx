@@ -243,7 +243,7 @@ export default function Home() {
       }
       else{
         conjugation = getConjugation(selectedPronoun, 1, infinitiveData.infinitive_id);
-        if (selectedTense == "Imperative"){
+        if (selectedTense == "Imperative" && selectedPronoun == "Tu"){
           conjugation = conjugation.slice(0, -1)
         }
       }
