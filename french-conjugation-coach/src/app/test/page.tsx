@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import { supabase } from "../../../lib/supabaseClient";
 
-export default function test() {
+export default function Test() {
   const [allData, setAllData] = useState<any[]>([]); // Stores everything from the infinitive table
   const [allConjugations, setAllConjugations] = useState<any[]>([]); // Stores everything from the conjugations table
   const [allStems, setAllStems] = useState<any[]>([]); // Stores everything from the stems table
