@@ -21,26 +21,33 @@ export default function Home() {
 
         <br></br>
 
-        <div className="flex justify-center items-center">
-          <p style={{ fontSize: "1.2rem" }} className="mr-4">Num Questions</p>
+        <div className="flex flex-col sm:flex-row sm:justify-center sm:items-center gap-4 w-full text-white text-[1.2rem]">
+  <div className="flex justify-center">
+    <p>Total Questions</p>
+  </div>
 
-          <select
-            className={styles.dropdown}
-            value={selectedNum}
-            onChange={(e) => setSelectedNum(Number(e.target.value))}
-          >
-            {question_num_choices.map((option) => (
-              <option key={option} value={option}>
-                {option}
-              </option>
-            ))}
-          </select>
+  <div className="flex justify-center">
+    <select
+      className={styles.dropdown}
+      value={selectedNum}
+      onChange={(e) => setSelectedNum(Number(e.target.value))}
+    >
+      {question_num_choices.map((option) => (
+        <option key={option} value={option}>
+          {option}
+        </option>
+      ))}
+    </select>
+  </div>
 
-          <span style={{ fontSize: "1.2rem" }} className="ml-4 text-white">
-            Max Points: {(selectedNum-10)*5 + 100}
-          </span>
-        </div>
-        <br></br>
+  <div className="flex justify-center">
+    <span>
+      Maximum of {(selectedNum - 10) * 5 + 100} points
+    </span>
+  </div>
+</div>
+
+<br></br>
 
         <label className="flex items-center justify-center text-white text-[1.4rem] mr-4">
             <input
