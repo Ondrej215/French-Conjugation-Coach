@@ -2,7 +2,7 @@
     background-color: #212225;
     text-align: center;
     border-radius: 15px;
-    min-width: 80vw;
+    min-width: 90vw;
     min-height: 75vh;
     font-size: 2rem;
 }
@@ -25,5 +25,5 @@
 }
 
 .wrapper {
-    margin-top: -4.5vh;
+    margin-top: -5vh;
 }
