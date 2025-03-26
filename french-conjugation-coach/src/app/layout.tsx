@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import Link from 'next/link';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -28,6 +29,9 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         {children}
+        <footer>
+        <Link href="https://portfolio-website-amber-pi.vercel.app/" target="_blank">© {new Date().getFullYear()} Ondrej Vamos. All rights reserved.</Link>
+        </footer>
       </body>
     </html>
   );

@@ -1,0 +1,30 @@
+.background{
+    background-color: #212225;
+    text-align: center;
+    border-radius: 15px;
+    min-width: 80vw;
+    min-height: 75vh;
+    font-size: 2rem;
+}
+
+.container {
+    display: flex;
+    justify-content: center; 
+    align-items: center;     
+    flex-direction:column;
+    height: 100vh;        
+}
+
+.dropdown {
+  color: white;
+  background-color: #171718;
+  border: 1px solid white;
+  padding: 0.7rem;
+  border-radius: 0.8rem;
+  font-size: 1rem;
+}
+
+.wrapper {
+    margin-top: -30px;
+}
+
