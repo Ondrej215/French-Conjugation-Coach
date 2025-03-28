@@ -11,11 +11,11 @@ export default function Home() {
   const [strictAccents, setStrictAccents] = useState<boolean>(true);
   const [leaderboardMode, setLeaderboardMode] = useState<boolean>(true);
   const [practiceStarted, setPracticeStarted] = useState(false);
-  const [percentage, setPercentage] = useState(100);
   const [progress, setProgress] = useState({
     points: 0,
     questionsAnswered: 0,
-    correctAnswers: 0
+    correctAnswers: 0,
+    percentage: 100
   });
 
   return (
