@@ -1,13 +1,16 @@
 @import "tailwindcss";
 
-/*#222328*/
+/*11111a
+#131416*/
 body {
-  background-color: #131416;
+  background-color: #11111A;
 }
 
+
+/*#1B1C1E*/
 footer {
   text-align: center;
-  background-color: #1B1C1E;
+  background-color: #1b1b27;
   padding: 2vh;
   font-size: 1rem;
   color: white;

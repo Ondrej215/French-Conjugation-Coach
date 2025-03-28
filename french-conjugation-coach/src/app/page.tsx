@@ -2,6 +2,7 @@
 import styles from './styles.module.css';
 import { useState } from "react";
 import Image from "next/image";
+import ProgressBar from "../../components/ProgressBar";
 
 export default function Home() {
   const [selectedNum, setSelectedNum] = useState<number>(10);
@@ -9,87 +10,112 @@ export default function Home() {
   const [unlimitedPractice, setUnlimitedPractice] = useState<boolean>(false);
   const [strictAccents, setStrictAccents] = useState<boolean>(true);
   const [leaderboardMode, setLeaderboardMode] = useState<boolean>(true);
+  const [practiceStarted, setPracticeStarted] = useState(false);
+  const [percentage, setPercentage] = useState(100);
+  const [progress, setProgress] = useState({
+    points: 0,
+    questionsAnswered: 0,
+    correctAnswers: 0
+  });
 
   return (
     <div className={`${styles.container} ${styles.wrapper}`}>
-      <Image src="/images/FranceFlag.jpeg" alt="France Flag" width={60} height={35}></Image>
-
-      <br></br>
-      
-      <div className={styles.background}>
-        <p>Verb Conjugation Drill</p>
-
-        <br></br>
-
-        <div className="flex flex-col sm:flex-row sm:justify-center sm:items-center gap-4 w-full text-white text-[1.2rem]">
-  <div className="flex justify-center">
-    <p>Total Questions</p>
-  </div>
-
-  <div className="flex justify-center">
-    <select
-      className={styles.dropdown}
-      value={selectedNum}
-      onChange={(e) => setSelectedNum(Number(e.target.value))}
-    >
-      {question_num_choices.map((option) => (
-        <option key={option} value={option}>
-          {option}
-        </option>
-      ))}
-    </select>
-  </div>
-
-  <div className="flex justify-center">
-    <span>
-      Maximum of {(selectedNum - 10) * 5 + 100} points
-    </span>
-  </div>
-</div>
-
-<br></br>
-
-        <label className="flex items-center justify-center text-white text-[1.4rem] mr-4">
-            <input
-            type="checkbox"
-            checked={unlimitedPractice}
-            onChange={(e) => setUnlimitedPractice(e.target.checked)}
-            className="peer hidden"
-            />
-                <span className="w-5 h-5 mr-2 border-2 border-white rounded-sm peer-checked:bg-blue-500 peer-checked:border-blue-500 transition-colors"></span>
-                Unlimited Practice
-        </label>
-
-        <br></br>
-
-        <label className="flex items-center justify-center text-white text-[1.4rem] mr-4">
-            <input
-            type="checkbox"
-            checked={strictAccents}
-            onChange={(e) => setStrictAccents(e.target.checked)}
-            className="peer hidden"
-            />
-                <span className="w-5 h-5 mr-2 border-2 border-white rounded-sm peer-checked:bg-blue-500 peer-checked:border-blue-500 transition-colors"></span>
-                Strict Accents
-        </label>
-
-        <br></br>
-
-        <label className="flex items-center justify-center text-white text-[1.4rem] mr-4">
-            <input
-            type="checkbox"
-            checked={leaderboardMode}
-            onChange={(e) => setLeaderboardMode(e.target.checked)}
-            className="peer hidden"
-            />
-                <span className="w-5 h-5 mr-2 border-2 border-white rounded-sm peer-checked:bg-blue-500 peer-checked:border-blue-500 transition-colors"></span>
-                Leaderboard Mode
-        </label>
-
-        <br></br>
-        <button>Start</button>
-
+      {/*This always appears*/}
+      <div className={styles.topWrapper}>
+        <Image 
+          src="/images/FranceFlag.jpeg" 
+          alt="France Flag" 
+          width={60} 
+          height={35}
+        />
       </div>
+
+      {!practiceStarted ? (
+        <div className={styles.background}>
+          <p>Verb Conjugation Drill</p>
+
+          <br />
+
+          <div className="flex flex-col sm:flex-row sm:justify-center sm:items-center gap-4 w-full text-white text-[1.2rem]">
+            <div className="flex justify-center">
+              <p>Total Questions</p>
+            </div>
+
+            <div className="flex justify-center">
+              <select
+                className={`${styles.dropdown} ${unlimitedPractice ? 'opacity-50 cursor-not-allowed' : ''}`}
+                value={selectedNum}
+                onChange={(e) => setSelectedNum(Number(e.target.value))}
+                disabled={unlimitedPractice}
+              >
+                {question_num_choices.map((option) => (
+                  <option key={option} value={option}>
+                    {option}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className="flex justify-center">
+              <span>
+                {unlimitedPractice
+                  ? "Maximum of unlimited points"
+                  : `Maximum of ${(selectedNum - 10) * 5 + 100} points`}
+              </span>
+            </div>
+          </div>
+
+          <br />
+
+          <label className="flex items-center justify-center text-white text-[1.4rem] mr-4">
+            <input
+              type="checkbox"
+              checked={unlimitedPractice}
+              onChange={(e) => setUnlimitedPractice(e.target.checked)}
+              className="peer hidden"
+            />
+            <span className="w-5 h-5 mr-2 border-2 border-white rounded-sm peer-checked:bg-blue-500 peer-checked:border-blue-500 transition-colors"></span>
+            Unlimited Practice
+          </label>
+
+          <br />
+
+          <label className="flex items-center justify-center text-white text-[1.4rem] mr-4">
+            <input
+              type="checkbox"
+              checked={strictAccents}
+              onChange={(e) => setStrictAccents(e.target.checked)}
+              className="peer hidden"
+            />
+            <span className="w-5 h-5 mr-2 border-2 border-white rounded-sm peer-checked:bg-blue-500 peer-checked:border-blue-500 transition-colors"></span>
+            Strict Accents
+          </label>
+
+          <br />
+
+          <label className="flex items-center justify-center text-white text-[1.4rem] mr-4">
+            <input
+              type="checkbox"
+              checked={leaderboardMode}
+              onChange={(e) => setLeaderboardMode(e.target.checked)}
+              className="peer hidden"
+            />
+            <span className="w-5 h-5 mr-2 border-2 border-white rounded-sm peer-checked:bg-blue-500 peer-checked:border-blue-500 transition-colors"></span>
+            Leaderboard Mode
+          </label>
+
+          <br />
+          <button onClick={() => setPracticeStarted(true)}>Start</button>
+        </div>
+      ) : (
+        /*Verb drill UI*/
+        <div>
+        <ProgressBar percentage={percentage}></ProgressBar>
+        <p className={styles.pointsText}>{progress.points} points ({progress.correctAnswers}/{progress.questionsAnswered})</p>
+
+        <div style={{ backgroundColor: '#222234', minHeight: '55vh', minWidth: '40vh', borderRadius: '15px', marginRight:'40vw', marginTop:'10vh'}}></div>
+        </div>
+      )}
     </div>
   );
 }
