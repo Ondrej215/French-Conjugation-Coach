@@ -110,7 +110,7 @@ export default function Home() {
       ) : (
         /*Verb drill UI*/
         <div>
-        <ProgressBar percentage={percentage}></ProgressBar>
+        <ProgressBar percentage={progress.percentage}></ProgressBar>
         <p className={styles.pointsText}>{progress.points} points ({progress.correctAnswers}/{progress.questionsAnswered})</p>
 
         <div style={{ backgroundColor: '#222234', minHeight: '55vh', minWidth: '40vh', borderRadius: '15px', marginRight:'40vw', marginTop:'10vh'}}></div>
