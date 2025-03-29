@@ -113,7 +113,17 @@ export default function Home() {
         <ProgressBar percentage={progress.percentage}></ProgressBar>
         <p className={styles.pointsText}>{progress.points} points ({progress.correctAnswers}/{progress.questionsAnswered})</p>
 
-        <div style={{ backgroundColor: '#222234', minHeight: '55vh', minWidth: '40vh', borderRadius: '15px', marginRight:'40vw', marginTop:'10vh'}}></div>
+        <input
+  type="range"
+  min="0"
+  max="100"
+  value={progress.percentage}
+  onChange={(e) => setProgress((prevProgress) => ({
+    ...prevProgress,
+    percentage: Number(e.target.value) // Use the slider's value
+  }))}
+  style={{ width: '100%', marginTop: '20px' }}
+/>
         </div>
       )}
     </div>
