@@ -110,20 +110,22 @@ export default function Home() {
       ) : (
         /*Verb drill UI*/
         <div>
-        <ProgressBar percentage={progress.percentage}></ProgressBar>
-        <p className={styles.pointsText}>{progress.points} points ({progress.correctAnswers}/{progress.questionsAnswered})</p>
+            <ProgressBar percentage={progress.percentage}></ProgressBar>
+            <p className={styles.pointsText}>{progress.points} points ({progress.correctAnswers}/{progress.questionsAnswered})</p>
+            <div className={styles.verbDrillContainer}>
+                <div className={styles.verbDrillBackground}>
+                    <p>Hello</p>
+                </div>
 
-        <input
-  type="range"
-  min="0"
-  max="100"
-  value={progress.percentage}
-  onChange={(e) => setProgress((prevProgress) => ({
-    ...prevProgress,
-    percentage: Number(e.target.value) // Use the slider's value
-  }))}
-  style={{ width: '100%', marginTop: '20px' }}
-/>
+                <p style={{fontSize: '1.8rem'}}>Je</p>
+                <input
+                    type="text"
+                    className={styles.verbDrillInput}
+                />
+
+                <button style={{width:'220px', height:'8vh', position:'absolute', top:'70%', left:'53%'}}>Check</button>
+                <button style={{width:'220px', height:'8vh', position:'absolute', top:'82%', left:'53%'}}>Finish Session</button>
+            </div>
         </div>
       )}
     </div>

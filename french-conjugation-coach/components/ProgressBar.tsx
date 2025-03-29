@@ -29,7 +29,7 @@ const ProgressBar: React.FC<ProgressBarProps> = ({ percentage }) => {
             width: `${percentage}%`,
             height: "100%",
             backgroundColor: "green",
-            borderRadius: isFull ? "100px" : "100px 0 0 100px", // Curved left side when full
+            borderRadius: isFull ? "15px" : "15px 0 0 15px", // Curved left side when full
           }}
         />
   
@@ -39,7 +39,7 @@ const ProgressBar: React.FC<ProgressBarProps> = ({ percentage }) => {
             width: `${100 - percentage}%`,
             height: "100%",
             backgroundColor: "red",
-            borderRadius: isEmpty ? "100px" : "0 100px 100px 0", // Curved right side when empty
+            borderRadius: isEmpty ? "15px" : "0 15px 15px 0", // Curved right side when empty
           }}
         />
   
