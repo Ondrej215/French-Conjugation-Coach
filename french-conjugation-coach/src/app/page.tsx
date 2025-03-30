@@ -148,8 +148,8 @@ export default function Home() {
                     style={{position:"absolute", width:isPortrait?"70vw":"25vw", height:"12vh", left:isPortrait?"20vw":"52vw", top:isPortrait?"60vh":"44vh"}}
                 />
 
-                <button style={{width:isPortrait?'40vw':'20vw', height:'10vh', position:'absolute', top:isPortrait? '78vh': '75vh', left:isPortrait?'30vw': '54.5vw'}}>Check</button>
-                <button style={{width:isPortrait?'20vw':'20vw', height:'10vh', position:'absolute', top:isPortrait? '78vh': '75vh', left:isPortrait?'75vw': '78vw', background:'#B85353'}} className={styles.endButton}>End</button>
+                <button style={{width:isPortrait?'40vw':'20vw', height:isPortrait?'6vh':'10vh', position:'absolute', top:isPortrait? '78vh': '75vh', left:isPortrait?'30vw': '54.5vw'}}>Check</button>
+                <button style={{width:isPortrait?'20vw':'20vw', height:isPortrait?'6vh':'10vh', position:'absolute', top:isPortrait? '78vh': '75vh', left:isPortrait?'75vw': '78vw', background:'#B85353'}} className={styles.endButton}>End</button>
             </div>
         </div>
       )}
