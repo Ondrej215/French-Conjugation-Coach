@@ -1,6 +1,6 @@
 "use client";
 import styles from './styles.module.css';
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import ProgressBar from "../../components/ProgressBar";
 
@@ -17,9 +17,33 @@ export default function Home() {
     correctAnswers: 0,
     percentage: 100
   });
+  const [isPortrait, setIsPortrait] = useState<boolean | null>(null); // Initially set to null
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {  // Ensure this code only runs client-side
+      const handleResize = () => {
+        setIsPortrait(window.innerHeight > window.innerWidth);
+      };
+
+      // Initial check for portrait mode when the component mounts
+      handleResize();
+
+      // Add event listener for resize events
+      window.addEventListener('resize', handleResize);
+
+      // Clean up the event listener on component unmount
+      return () => window.removeEventListener('resize', handleResize);
+    }
+  }, []);
+
+  // Optional: Prevent rendering UI until isPortrait is determined
+  if (isPortrait === null) {
+    return <div>Loading...</div>; // Show loading state while determining the initial layout
+  }
 
   return (
     <div className={`${styles.container} ${styles.wrapper}`}>
+
       {/*This always appears*/}
       <div className={styles.topWrapper}>
         <Image 
@@ -67,7 +91,7 @@ export default function Home() {
 
           <br />
 
-          <label className="flex items-center justify-center text-white text-[1.4rem] mr-4">
+          <label className="flex items-center justify-center text-white text-[1.4rem] mr-4 cursor-pointer">
             <input
               type="checkbox"
               checked={unlimitedPractice}
@@ -80,7 +104,7 @@ export default function Home() {
 
           <br />
 
-          <label className="flex items-center justify-center text-white text-[1.4rem] mr-4">
+          <label className="flex items-center justify-center text-white text-[1.4rem] mr-4 cursor-pointer">
             <input
               type="checkbox"
               checked={strictAccents}
@@ -93,7 +117,7 @@ export default function Home() {
 
           <br />
 
-          <label className="flex items-center justify-center text-white text-[1.4rem] mr-4">
+          <label className="flex items-center justify-center text-white text-[1.4rem] mr-4 cursor-pointer">
             <input
               type="checkbox"
               checked={leaderboardMode}
@@ -105,7 +129,7 @@ export default function Home() {
           </label>
 
           <br />
-          <button onClick={() => setPracticeStarted(true)}>Start</button>
+          <button onClick={() => setPracticeStarted(true)} style={{position:'absolute', top:isPortrait?'78vh': '70vh', left:isPortrait?'32.5vw':'42.5vw',width:isPortrait?'35vw':'15vw', height:isPortrait?'7vh':'9vh'}}>Start</button>
         </div>
       ) : (
         /*Verb drill UI*/
@@ -113,7 +137,7 @@ export default function Home() {
             <ProgressBar percentage={progress.percentage}></ProgressBar>
             <p className={styles.pointsText}>{progress.points} points ({progress.correctAnswers}/{progress.questionsAnswered})</p>
             <div className={styles.verbDrillContainer}>
-                <div className={styles.verbDrillBackground}>
+                <div className={styles.verbDrillBackground} style={{width:isPortrait?'90vw':'30vw', height:isPortrait?'30vh':'50vh', left:isPortrait?'5vw': '14vw', top:'25vh'}}>
                     <p>Hello</p>
                 </div>
 
@@ -121,10 +145,11 @@ export default function Home() {
                 <input
                     type="text"
                     className={styles.verbDrillInput}
+                    style={{position:"absolute", width:isPortrait?"70vw":"25vw", height:"12vh", left:isPortrait?"20vw":"52vw", top:isPortrait?"60vh":"44vh"}}
                 />
 
-                <button style={{width:'220px', height:'8vh', position:'absolute', top:'70%', left:'53%'}}>Check</button>
-                <button style={{width:'220px', height:'8vh', position:'absolute', top:'82%', left:'53%'}}>Finish Session</button>
+                <button style={{width:isPortrait?'40vw':'20vw', height:'10vh', position:'absolute', top:isPortrait? '78vh': '75vh', left:isPortrait?'30vw': '54.5vw'}}>Check</button>
+                <button style={{width:isPortrait?'20vw':'20vw', height:'10vh', position:'absolute', top:isPortrait? '78vh': '75vh', left:isPortrait?'75vw': '78vw', background:'#B85353'}} className={styles.endButton}>End</button>
             </div>
         </div>
       )}
