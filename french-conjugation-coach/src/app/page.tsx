@@ -11,13 +11,23 @@ export default function Home() {
   const [strictAccents, setStrictAccents] = useState<boolean>(true);
   const [leaderboardMode, setLeaderboardMode] = useState<boolean>(true);
   const [practiceStarted, setPracticeStarted] = useState(false);
+
   const [progress, setProgress] = useState({
     points: 0,
     questionsAnswered: 0,
     correctAnswers: 0,
     percentage: 100
   });
-  const [isPortrait, setIsPortrait] = useState<boolean | null>(null); // Initially set to null
+
+  const [verbInfo, setVerbInfo] = useState({
+    infinitive:'Manger',
+    translation:'To eat',
+    pronoun:'Je',
+    tense:'Present',
+    answer:''
+  })
+
+  const [isPortrait, setIsPortrait] = useState<boolean | null>(null);
 
   useEffect(() => {
     if (typeof window !== "undefined") {  // Ensure this code only runs client-side
@@ -137,19 +147,23 @@ export default function Home() {
             <ProgressBar percentage={progress.percentage}></ProgressBar>
             <p className={styles.pointsText}>{progress.points} points ({progress.correctAnswers}/{progress.questionsAnswered})</p>
             <div className={styles.verbDrillContainer}>
-                <div className={styles.verbDrillBackground} style={{width:isPortrait?'90vw':'30vw', height:isPortrait?'30vh':'50vh', left:isPortrait?'5vw': '14vw', top:'25vh'}}>
-                    <p>Hello</p>
+                <div className={styles.verbDrillBackground} style={{width:isPortrait?'84vw':'30vw', height:isPortrait?'30vh':'50vh', left:isPortrait?'8vw': '14vw', top:'25vh'}}>
+                    {!isPortrait && <div style={{ height: "5vh" }} />}
+                    <p style={{fontSize:isPortrait?'1.8rem':'2.4rem', fontWeight:'500'}}>{verbInfo.infinitive}</p>
+                    <p style={{fontSize:'1.2rem', fontWeight:'50'}}>{verbInfo.translation}</p>
+                    <br></br>
+                    <p style={{fontSize:isPortrait?'1.4rem':'1.9rem', backgroundColor:'#191A27', borderRadius:'15px'}}>{verbInfo.tense}</p>
                 </div>
 
-                <p style={{fontSize: '1.8rem'}}>Je</p>
+                <p style={{fontSize: '2.1rem', position:'absolute', left:isPortrait?'7vw':'48vw', top:isPortrait?'60.5vh':'47vh'}}>{verbInfo.pronoun}</p>
                 <input
                     type="text"
                     className={styles.verbDrillInput}
-                    style={{position:"absolute", width:isPortrait?"70vw":"25vw", height:"12vh", left:isPortrait?"20vw":"52vw", top:isPortrait?"60vh":"44vh"}}
+                    style={{position:"absolute", width:isPortrait?"65vw":"25vw", height:isPortrait?'8vh':"12vh", left:isPortrait?"20vw":"52vw", top:isPortrait?"60vh":"44vh"}}
                 />
 
-                <button style={{width:isPortrait?'40vw':'20vw', height:isPortrait?'6vh':'10vh', position:'absolute', top:isPortrait? '78vh': '75vh', left:isPortrait?'30vw': '54.5vw'}}>Check</button>
-                <button style={{width:isPortrait?'20vw':'20vw', height:isPortrait?'6vh':'10vh', position:'absolute', top:isPortrait? '78vh': '75vh', left:isPortrait?'75vw': '78vw', background:'#B85353'}} className={styles.endButton}>End</button>
+                <button style={{width:isPortrait?'40vw':'20vw', height:isPortrait?'8vh':'10vh', position:'absolute', top:'76vh', left:isPortrait?'30vw': '54.5vw'}}>Check</button>
+                <button style={{width:isPortrait?'20vw':'20vw', height:isPortrait?'8vh':'10vh', position:'absolute', top:'76vh', left:isPortrait?'75vw': '78vw', background:'#B85353'}} className={styles.endButton}>End</button>
             </div>
         </div>
       )}
