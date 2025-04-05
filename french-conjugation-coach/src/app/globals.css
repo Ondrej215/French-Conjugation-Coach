@@ -41,6 +41,10 @@ button:hover {
   box-shadow: 0 0 10px 4px rgba(59, 130, 255, 0.3);
 }
 
+button:focus {
+  outline: none;
+}
+
 /*
   git add .
   git commit -m ""

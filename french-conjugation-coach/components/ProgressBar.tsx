@@ -17,7 +17,7 @@ const ProgressBar: React.FC<ProgressBarProps> = ({ percentage }) => {
           top: "10vh", // Adjust space from top (can be adjusted)
           left: "50%", // Center horizontally
           transform: "translateX(-50%)", // Adjust the element to be exactly centered
-          width: "80vw", // Set width as per your need
+          width: "70vw", // Set width as per your need
           height: "5vh",
           display: "flex", // Use flex to align the green and red portions in one row
           zIndex: 999, // Ensure the progress bar stays on top of other content
@@ -53,6 +53,7 @@ const ProgressBar: React.FC<ProgressBarProps> = ({ percentage }) => {
             color: "black",
             opacity: 0.4,
             fontWeight: "bold",
+            fontSize: '1.3rem'
           }}
         >
         {percentage}%
