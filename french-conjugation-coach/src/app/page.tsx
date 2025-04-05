@@ -40,6 +40,8 @@ export default function Home() {
   const [inputValue, setInputValue] = useState<string>('');
   const [inputDisabled, setInputDisabled] = useState<boolean>(false);
   const inputRef = useRef<HTMLInputElement>(null);
+  const [correctHeight, setCorrectHeight] = useState<number>(1);
+  const [incorrectHeight, setIncorrectHeight] = useState<number>(1);
 
   function capitalise(str: string): string {
     return str.charAt(0).toUpperCase() + str.slice(1);
@@ -313,7 +315,7 @@ useEffect(() => {
         }
         else{
           conjugation = getConjugation(selectedPronoun, 1, infinitiveData.infinitive_id);
-          if (selectedTense == "Imperative" && selectedPronoun == "Tu"){
+          if (selectedTense == "Imperative" && selectedPronoun == "Tu" && ['er', 'ger', 'cer', 'yer'].includes(infinitiveData.ending_type)){
             conjugation = conjugation.slice(0, -1)
           }
         }
@@ -576,6 +578,9 @@ useEffect(() => {
             inputRef.current.focus();
         }
 
+        setCorrectHeight(1);
+        setIncorrectHeight(1);
+
         const numVerbs = allData.length;
 
         // decides which verb to use from shuffledInfinitives, goes through the list then repeats
@@ -637,6 +642,9 @@ useEffect(() => {
             const answer = normaliseInput(inputValue);
 
             if (answer === verbInfo.answer){
+
+                setCorrectHeight(isPortrait?3:2);
+
                 setProgress(prevProgress => ({
                     ...prevProgress,
                     correctAnswers: prevProgress.correctAnswers + 1,
@@ -644,6 +652,9 @@ useEffect(() => {
                     percentage: Math.round((prevProgress.correctAnswers + 1) / (prevProgress.questionsAnswered + 1) * 100)
                 }))
             }else {
+
+                setIncorrectHeight(isPortrait?3:2);
+
                 setProgress(prevProgress => ({
                     ...prevProgress,
                     questionsAnswered: prevProgress.questionsAnswered + 1,
@@ -766,9 +777,11 @@ useEffect(() => {
                     <p style={{fontSize:'1.2rem', fontWeight:'50'}}>{verbInfo.translation}</p>
                     <br></br>
                     <p style={{fontSize:isPortrait?'1.4rem':'1.9rem', backgroundColor:'#191A27', borderRadius:'15px'}}>{verbInfo.tense}</p>
+                    {isPortrait?<></>:<br/>}
+                    <p style={{fontSize:isPortrait?'1.8rem':'2.4rem', fontWeight:'400'}}>{checkButton?'':capitalise(verbInfo.pronoun) + ' ' +  capitalise(verbInfo.answer)}</p>
                 </div>
 
-                <p style={{fontSize: '1.9rem', position:'absolute', left:isPortrait?'2vw':'46vw', top:isPortrait?'61vh':'47vh'}}>{verbInfo.pronoun}</p>
+                <p style={{fontSize: '1.6rem', position:'absolute', left:isPortrait?'2vw':'46vw', top:isPortrait?'61vh':'47.5vh'}}>{verbInfo.pronoun}</p>
                 <input
                     ref={inputRef}
                     type="text"
@@ -780,7 +793,17 @@ useEffect(() => {
                     onMouseEnter={handleMouseEnter}/>
 
                 <button onClick={() => {nextQuestion();}} onKeyDown={handleKeyDown} style={{width:isPortrait?'40vw':'20vw', height:isPortrait?'8vh':'10vh', position:'absolute', top:'76vh', left:isPortrait?'30vw': '54.5vw'}}>{checkButton?'Check':'Next'}</button>
-                <button onClick={() => {console.log(verbInfo.answer)}} style={{width:isPortrait?'20vw':'20vw', height:isPortrait?'8vh':'10vh', position:'absolute', top:'76vh', left:isPortrait?'75vw': '78vw', background:'#B85353'}} className={styles.endButton}>End</button>
+                {!checkButton? <button onClick={() => {console.log(verbInfo.answer)}} style={{width:isPortrait?'20vw':'20vw', height:isPortrait?'8vh':'10vh', position:'absolute', top:'76vh', left:isPortrait?'75vw': '78vw', background:'#B85353'}} className={styles.endButton}>End</button>: <div></div>}
+           
+                {/*Correct answer message*/}
+                <div className={styles.correctPopup} style={{alignItems: 'center', display:"flex", flexDirection:'column', position:"absolute", width:isPortrait?"65vw":"25vw", height:isPortrait?`${3 * correctHeight}vh` : `${6 * correctHeight}vh`, left:isPortrait?"20vw":"52vw", top:isPortrait?"63vh":"50vh"}}>
+                    <Image src="/images/greenCheck.png" alt="Correct" width={30} height={30} style={{marginTop:'auto', paddingBottom:isPortrait?'0vh':'1vh'}}/>
+                </div>
+
+                {/*Incorrect answer message*/}
+                <div className={styles.incorrectPopup} style={{alignItems: 'center', display:"flex", flexDirection:'column', position:"absolute", width:isPortrait?"65vw":"25vw", height:isPortrait?`${3 * incorrectHeight}vh` : `${6 * incorrectHeight}vh`, left:isPortrait?"20vw":"52vw", top:isPortrait?"63vh":"50vh"}}>
+                    <Image src="/images/redCross.png" alt="Incorrect" width={30} height={30} style={{marginTop:'auto', paddingBottom:isPortrait?'0vh':'1vh'}}/>
+                </div>
             </div>
         </div>
       )}
