@@ -42,6 +42,7 @@ export default function Home() {
   const inputRef = useRef<HTMLInputElement>(null);
   const [correctHeight, setCorrectHeight] = useState<number>(1);
   const [incorrectHeight, setIncorrectHeight] = useState<number>(1);
+  const [capsLockOn, setCapsLockOn] = useState(false);
 
   function capitalise(str: string): string {
     return str.charAt(0).toUpperCase() + str.slice(1);
@@ -107,27 +108,43 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-  const handleKeyDown = (e: KeyboardEvent) => {
-    if (e.key === "Enter") {
-      nextQuestion();
-    }
-  };
-
-  window.addEventListener("keydown", handleKeyDown);
-  return () => {
-    window.removeEventListener("keydown", handleKeyDown);
-  };
-}, [nextQuestion]);
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Enter") {
+        nextQuestion();
+      }
+      if (e.getModifierState("CapsLock")) {
+        setCapsLockOn(true);
+      }
+    };
+  
+    const handleKeyUp = (e: KeyboardEvent) => {
+      if (!e.getModifierState("CapsLock")) {
+        setCapsLockOn(false);
+      }
+    };
+  
+    window.addEventListener("keydown", handleKeyDown);
+    window.addEventListener("keyup", handleKeyUp);
+  
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+      window.removeEventListener("keyup", handleKeyUp);
+    };
+  }, [nextQuestion]);
 
 useEffect(() => {
-    if (!inputDisabled && inputRef.current) {
-      inputRef.current.focus();
-    }
+    focusInput();
   }, [inputDisabled]);
 
   if (isPortrait === null) {
     return <div>Loading...</div>; // Show loading state while determining the initial layout
   }
+
+  const focusInput = () => {
+    if (!inputDisabled && inputRef.current) {
+      inputRef.current.focus();
+    }
+  };
 
   const getConjugation = (pronounConjugation: string, tenseID: number, infinitiveID: number) => {
 
@@ -649,7 +666,8 @@ useEffect(() => {
                     ...prevProgress,
                     correctAnswers: prevProgress.correctAnswers + 1,
                     questionsAnswered: prevProgress.questionsAnswered + 1,
-                    percentage: Math.round((prevProgress.correctAnswers + 1) / (prevProgress.questionsAnswered + 1) * 100)
+                    percentage: Math.round((prevProgress.correctAnswers + 1) / (prevProgress.questionsAnswered + 1) * 100),
+                    points: prevProgress.points + ((prevProgress.questionsAnswered < 10)?10:5)
                 }))
             }else {
 
@@ -674,6 +692,13 @@ useEffect(() => {
         const input = event.target as HTMLInputElement;
         input.focus(); // Focus the input when hovered
       };
+
+    function addAccent(accent:string) {
+        if (!inputDisabled) {
+            setInputValue(inputValue + (capsLockOn ? capitalise(accent) : accent))
+            focusInput();
+        }  
+    } 
 
   return (
     <div className={`${styles.container} ${styles.wrapper}`}>
@@ -771,14 +796,14 @@ useEffect(() => {
             <ProgressBar percentage={progress.percentage}></ProgressBar>
             <p className={styles.pointsText}>{progress.points} points ({progress.correctAnswers}/{progress.questionsAnswered})</p>
             <div className={styles.verbDrillContainer}>
-                <div className={styles.verbDrillBackground} style={{width:isPortrait?'84vw':'30vw', height:isPortrait?'30vh':'50vh', left:isPortrait?'8vw': '14vw', top:'25vh'}}>
+                <div className={styles.verbDrillBackground} style={{width:isPortrait?'84vw':'30vw', height:isPortrait?'27vh':'50vh', left:isPortrait?'8vw': '14vw', top:'25vh'}}>
                     {!isPortrait && <div style={{ height: "5vh" }} />}
                     <p style={{fontSize:isPortrait?'1.8rem':'2.4rem', fontWeight:'500'}}>{capitalise(verbInfo.infinitive)}</p>
                     <p style={{fontSize:'1.2rem', fontWeight:'50'}}>{verbInfo.translation}</p>
                     <br></br>
                     <p style={{fontSize:isPortrait?'1.4rem':'1.9rem', backgroundColor:'#191A27', borderRadius:'15px'}}>{verbInfo.tense}</p>
                     {isPortrait?<></>:<br/>}
-                    <p style={{fontSize:isPortrait?'1.8rem':'2.4rem', fontWeight:'400'}}>{checkButton?'':capitalise(verbInfo.pronoun) + ' ' +  capitalise(verbInfo.answer)}</p>
+                    <p style={{fontSize:isPortrait?'1.8rem':'2.4rem', fontWeight:'400'}}>{checkButton?'':((verbInfo.tense !== "Imperative")?capitalise(verbInfo.pronoun):'') + ' ' +  capitalise(verbInfo.answer)}</p>
                 </div>
 
                 <p style={{fontSize: '1.6rem', position:'absolute', left:isPortrait?'2vw':'46vw', top:isPortrait?'61vh':'47.5vh'}}>{verbInfo.pronoun}</p>
@@ -804,6 +829,13 @@ useEffect(() => {
                 <div className={styles.incorrectPopup} style={{alignItems: 'center', display:"flex", flexDirection:'column', position:"absolute", width:isPortrait?"65vw":"25vw", height:isPortrait?`${3 * incorrectHeight}vh` : `${6 * incorrectHeight}vh`, left:isPortrait?"20vw":"52vw", top:isPortrait?"63vh":"50vh"}}>
                     <Image src="/images/redCross.png" alt="Incorrect" width={30} height={30} style={{marginTop:'auto', paddingBottom:isPortrait?'0vh':'1vh'}}/>
                 </div>
+
+                <button onClick = {() => {addAccent('é');}} style={{position:'absolute', top:isPortrait?'54vh':'30vh', left:isPortrait?'16vw':'50vw', height:isPortrait?'4.5vh':'6vh', width:isPortrait?'10vw':'4vw', borderRadius:'180px', padding:'0rem 0rem', backgroundColor:'#1852B1'}}>é</button>
+                <button onClick = {() => {addAccent('è');}}  style={{position:'absolute', top:isPortrait?'54vh':'30vh', left:isPortrait?'28.5vw':'55vw', height:isPortrait?'4.5vh':'6vh', width:isPortrait?'10vw':'4vw', borderRadius:'180px', padding:'0rem 0rem', backgroundColor:'#1852B1'}}>è</button>
+                <button onClick = {() => {addAccent('ê');}}  style={{position:'absolute', top:isPortrait?'54vh':'30vh', left:isPortrait?'41vw':'60vw', height:isPortrait?'4.5vh':'6vh', width:isPortrait?'10vw':'4vw', borderRadius:'180px', padding:'0rem 0rem', backgroundColor:'#1852B1'}}>ê</button>
+                <button onClick = {() => {addAccent('î');}}  style={{position:'absolute', top:isPortrait?'54vh':'30vh', left:isPortrait?'53.5vw':'65vw', height:isPortrait?'4.5vh':'6vh', width:isPortrait?'10vw':'4vw', borderRadius:'180px', padding:'0rem 0rem', backgroundColor:'#1852B1'}}>î</button>
+                <button onClick = {() => {addAccent('û');}}  style={{position:'absolute', top:isPortrait?'54vh':'30vh', left:isPortrait?'66vw':'70vw', height:isPortrait?'4.5vh':'6vh', width:isPortrait?'10vw':'4vw', borderRadius:'180px', padding:'0rem 0rem', backgroundColor:'#1852B1'}}>û</button>
+                <button onClick = {() => {addAccent('ç');}}  style={{position:'absolute', top:isPortrait?'54vh':'30vh', left:isPortrait?'78.5vw':'75vw', height:isPortrait?'4.5vh':'6vh', width:isPortrait?'10vw':'4vw', borderRadius:'180px', padding:'0rem 0rem', backgroundColor:'#1852B1'}}>ç</button>
             </div>
         </div>
       )}
