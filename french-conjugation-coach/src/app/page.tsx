@@ -132,6 +132,12 @@ export default function Home() {
     };
   }, [nextQuestion]);
 
+  const focusInput = () => {
+    if (!inputDisabled && inputRef.current) {
+      inputRef.current.focus();
+    }
+  };
+
 useEffect(() => {
     focusInput();
   }, [inputDisabled]);
@@ -139,12 +145,6 @@ useEffect(() => {
   if (isPortrait === null) {
     return <div>Loading...</div>; // Show loading state while determining the initial layout
   }
-
-  const focusInput = () => {
-    if (!inputDisabled && inputRef.current) {
-      inputRef.current.focus();
-    }
-  };
 
   const getConjugation = (pronounConjugation: string, tenseID: number, infinitiveID: number) => {
 
