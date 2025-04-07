@@ -11,7 +11,7 @@ export default function Home() {
   const [unlimitedPractice, setUnlimitedPractice] = useState<boolean>(false);
   const [strictAccents, setStrictAccents] = useState<boolean>(true);
   const [leaderboardMode, setLeaderboardMode] = useState<boolean>(true);
-  const [practiceStarted, setPracticeStarted] = useState(false);
+  const [menu, setMenu] = useState<string>('home');
 
   const [progress, setProgress] = useState({
     points: 0,
@@ -42,7 +42,8 @@ export default function Home() {
   const inputRef = useRef<HTMLInputElement>(null);
   const [correctHeight, setCorrectHeight] = useState<number>(1);
   const [incorrectHeight, setIncorrectHeight] = useState<number>(1);
-  const [capsLockOn, setCapsLockOn] = useState(false);
+  const [capsLockOn, setCapsLockOn] = useState<boolean>(false);
+  const [endWarning, setEndWarning] = useState<boolean>(false);
 
   function capitalise(str: string): string {
     return str.charAt(0).toUpperCase() + str.slice(1);
@@ -109,7 +110,7 @@ export default function Home() {
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Enter") {
+      if (e.key === "Enter" && menu === "drill" && (progress.questionsAnswered < selectedNum || unlimitedPractice)) {
         nextQuestion();
       }
       if (e.getModifierState("CapsLock")) {
@@ -583,13 +584,12 @@ useEffect(() => {
 
   function nextQuestion() {
 
-    console.log(shuffledInfinitives);
     setCheckButton(!checkButton);
     if (!checkButton){
 
         // clear verb input
         setInputValue("");
-        setInputDisabled(false)
+        setInputDisabled(false);
 
         if (inputRef.current) {
             inputRef.current.focus();
@@ -700,145 +700,343 @@ useEffect(() => {
         }  
     } 
 
-  return (
-    <div className={`${styles.container} ${styles.wrapper}`}>
+    function resetStats(){
+        setMenu('home');
+        setProgress({
+            points: 0,
+            questionsAnswered: 0,
+            correctAnswers: 0,
+            percentage: 100,
+          });
+    }
 
-      {/*This always appears*/}
-      <div className={styles.topWrapper}>
-        <Image 
-          src="/images/FranceFlag.jpeg" 
-          alt="France Flag" 
-          width={60} 
-          height={35}
-        />
-      </div>
-
-      {!practiceStarted ? (
-        <div className={styles.background}>
-          <p>Verb Conjugation Drill</p>
-
-          <br />
-
-          <div className="flex flex-col sm:flex-row sm:justify-center sm:items-center gap-4 w-full text-white text-[1.2rem]">
-            <div className="flex justify-center">
-              <p>Total Questions</p>
-            </div>
-
-            <div className="flex justify-center">
-              <select
-                className={`${styles.dropdown} ${unlimitedPractice ? 'opacity-50 cursor-not-allowed' : ''}`}
-                value={selectedNum}
-                onChange={(e) => setSelectedNum(Number(e.target.value))}
-                disabled={unlimitedPractice}
-              >
-                {question_num_choices.map((option) => (
-                  <option key={option} value={option}>
-                    {option}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <div className="flex justify-center">
-              <span>
-                {unlimitedPractice
-                  ? "Maximum of unlimited points"
-                  : `Maximum of ${(selectedNum - 10) * 5 + 100} points`}
-              </span>
-            </div>
+    return (
+        <div className={`${styles.container} ${styles.wrapper}`}>
+      
+          {/*This always appears*/}
+          <div className={styles.topWrapper}>
+            <Image 
+              src="/images/FranceFlag.jpeg" 
+              alt="France Flag" 
+              width={60} 
+              height={35}
+              style={{ borderRadius: '5px' }}
+            />
           </div>
-
-          <br />
-
-          <label className="flex items-center justify-center text-white text-[1.4rem] mr-4 cursor-pointer">
-            <input
-              type="checkbox"
-              checked={unlimitedPractice}
-              onChange={(e) => setUnlimitedPractice(e.target.checked)}
-              className="peer hidden"
-            />
-            <span className="w-5 h-5 mr-2 border-2 border-white rounded-sm peer-checked:bg-blue-500 peer-checked:border-blue-500 transition-colors"></span>
-            Unlimited Practice
-          </label>
-
-          <br />
-
-          <label className="flex items-center justify-center text-white text-[1.4rem] mr-4 cursor-pointer">
-            <input
-              type="checkbox"
-              checked={strictAccents}
-              onChange={(e) => setStrictAccents(e.target.checked)}
-              className="peer hidden"
-            />
-            <span className="w-5 h-5 mr-2 border-2 border-white rounded-sm peer-checked:bg-blue-500 peer-checked:border-blue-500 transition-colors"></span>
-            Strict Accents
-          </label>
-
-          <br />
-
-          <label className="flex items-center justify-center text-white text-[1.4rem] mr-4 cursor-pointer">
-            <input
-              type="checkbox"
-              checked={leaderboardMode}
-              onChange={(e) => setLeaderboardMode(e.target.checked)}
-              className="peer hidden"
-            />
-            <span className="w-5 h-5 mr-2 border-2 border-white rounded-sm peer-checked:bg-blue-500 peer-checked:border-blue-500 transition-colors"></span>
-            Leaderboard Mode
-          </label>
-
-          <br />
-          <button onClick={() => {setPracticeStarted(true); nextQuestion();}} style={{position:'absolute', top:isPortrait?'78vh': '75vh', left:isPortrait?'32.5vw':'42.5vw',width:isPortrait?'35vw':'15vw', height:isPortrait?'7vh':'9vh'}}>Start</button>
-        </div>
-      ) : (
-        /*Verb drill UI*/
-        <div>
-            <ProgressBar percentage={progress.percentage}></ProgressBar>
-            <p className={styles.pointsText}>{progress.points} points ({progress.correctAnswers}/{progress.questionsAnswered})</p>
-            <div className={styles.verbDrillContainer}>
-                <div className={styles.verbDrillBackground} style={{width:isPortrait?'84vw':'30vw', height:isPortrait?'27vh':'50vh', left:isPortrait?'8vw': '14vw', top:'25vh'}}>
-                    {!isPortrait && <div style={{ height: "5vh" }} />}
-                    <p style={{fontSize:isPortrait?'1.8rem':'2.4rem', fontWeight:'500'}}>{capitalise(verbInfo.infinitive)}</p>
-                    <p style={{fontSize:'1.2rem', fontWeight:'50'}}>{verbInfo.translation}</p>
-                    <br></br>
-                    <p style={{fontSize:isPortrait?'1.4rem':'1.9rem', backgroundColor:'#191A27', borderRadius:'15px'}}>{verbInfo.tense}</p>
-                    {isPortrait?<></>:<br/>}
-                    <p style={{fontSize:isPortrait?'1.8rem':'2.4rem', fontWeight:'400'}}>{checkButton?'':((verbInfo.tense !== "Imperative")?capitalise(verbInfo.pronoun):'') + ' ' +  capitalise(verbInfo.answer)}</p>
+      
+          {menu === 'home' && (
+            <div className={styles.background}>
+              <p>Verb Conjugation Drill</p>
+      
+              <br />
+      
+              <div className="flex flex-col sm:flex-row sm:justify-center sm:items-center gap-4 w-full text-white text-[1.2rem]">
+                <div className="flex justify-center">
+                  <p>Total Questions</p>
                 </div>
-
-                <p style={{fontSize: '1.6rem', position:'absolute', left:isPortrait?'2vw':'46vw', top:isPortrait?'61vh':'47.5vh'}}>{verbInfo.pronoun}</p>
+      
+                <div className="flex justify-center">
+                  <select
+                    className={`${styles.dropdown} ${unlimitedPractice ? 'opacity-50 cursor-not-allowed' : ''}`}
+                    value={selectedNum}
+                    onChange={(e) => setSelectedNum(Number(e.target.value))}
+                    disabled={unlimitedPractice}
+                  >
+                    {question_num_choices.map((option) => (
+                      <option key={option} value={option}>
+                        {option}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+      
+                <div className="flex justify-center">
+                  <span>
+                    {unlimitedPractice
+                      ? "Maximum of unlimited points"
+                      : `Maximum of ${(selectedNum - 10) * 5 + 100} points`}
+                  </span>
+                </div>
+              </div>
+      
+              <br />
+      
+              <label className="flex items-center justify-center text-white text-[1.4rem] mr-4 cursor-pointer">
                 <input
-                    ref={inputRef}
-                    type="text"
-                    className={styles.verbDrillInput}
-                    style={{position:"absolute", width:isPortrait?"65vw":"25vw", height:isPortrait?'8vh':"12vh", left:isPortrait?"20vw":"52vw", top:isPortrait?"60vh":"44vh"}}
-                    value={inputValue} // Controlled input
-                    onChange={(e) => setInputValue(e.target.value)}
-                    disabled={inputDisabled}
-                    onMouseEnter={handleMouseEnter}/>
-
-                <button onClick={() => {nextQuestion();}} onKeyDown={handleKeyDown} style={{width:isPortrait?'40vw':'20vw', height:isPortrait?'8vh':'10vh', position:'absolute', top:'76vh', left:isPortrait?'30vw': '54.5vw'}}>{checkButton?'Check':'Next'}</button>
-                {!checkButton? <button onClick={() => {console.log(verbInfo.answer)}} style={{width:isPortrait?'20vw':'20vw', height:isPortrait?'8vh':'10vh', position:'absolute', top:'76vh', left:isPortrait?'75vw': '78vw', background:'#B85353'}} className={styles.endButton}>End</button>: <div></div>}
-           
-                {/*Correct answer message*/}
-                <div className={styles.correctPopup} style={{alignItems: 'center', display:"flex", flexDirection:'column', position:"absolute", width:isPortrait?"65vw":"25vw", height:isPortrait?`${3 * correctHeight}vh` : `${6 * correctHeight}vh`, left:isPortrait?"20vw":"52vw", top:isPortrait?"63vh":"50vh"}}>
-                    <Image src="/images/greenCheck.png" alt="Correct" width={30} height={30} style={{marginTop:'auto', paddingBottom:isPortrait?'0vh':'1vh'}}/>
-                </div>
-
-                {/*Incorrect answer message*/}
-                <div className={styles.incorrectPopup} style={{alignItems: 'center', display:"flex", flexDirection:'column', position:"absolute", width:isPortrait?"65vw":"25vw", height:isPortrait?`${3 * incorrectHeight}vh` : `${6 * incorrectHeight}vh`, left:isPortrait?"20vw":"52vw", top:isPortrait?"63vh":"50vh"}}>
-                    <Image src="/images/redCross.png" alt="Incorrect" width={30} height={30} style={{marginTop:'auto', paddingBottom:isPortrait?'0vh':'1vh'}}/>
-                </div>
-
-                <button onClick = {() => {addAccent('é');}} style={{position:'absolute', top:isPortrait?'54vh':'30vh', left:isPortrait?'16vw':'50vw', height:isPortrait?'4.5vh':'6vh', width:isPortrait?'10vw':'4vw', borderRadius:'180px', padding:'0rem 0rem', backgroundColor:'#1852B1'}}>é</button>
-                <button onClick = {() => {addAccent('è');}}  style={{position:'absolute', top:isPortrait?'54vh':'30vh', left:isPortrait?'28.5vw':'55vw', height:isPortrait?'4.5vh':'6vh', width:isPortrait?'10vw':'4vw', borderRadius:'180px', padding:'0rem 0rem', backgroundColor:'#1852B1'}}>è</button>
-                <button onClick = {() => {addAccent('ê');}}  style={{position:'absolute', top:isPortrait?'54vh':'30vh', left:isPortrait?'41vw':'60vw', height:isPortrait?'4.5vh':'6vh', width:isPortrait?'10vw':'4vw', borderRadius:'180px', padding:'0rem 0rem', backgroundColor:'#1852B1'}}>ê</button>
-                <button onClick = {() => {addAccent('î');}}  style={{position:'absolute', top:isPortrait?'54vh':'30vh', left:isPortrait?'53.5vw':'65vw', height:isPortrait?'4.5vh':'6vh', width:isPortrait?'10vw':'4vw', borderRadius:'180px', padding:'0rem 0rem', backgroundColor:'#1852B1'}}>î</button>
-                <button onClick = {() => {addAccent('û');}}  style={{position:'absolute', top:isPortrait?'54vh':'30vh', left:isPortrait?'66vw':'70vw', height:isPortrait?'4.5vh':'6vh', width:isPortrait?'10vw':'4vw', borderRadius:'180px', padding:'0rem 0rem', backgroundColor:'#1852B1'}}>û</button>
-                <button onClick = {() => {addAccent('ç');}}  style={{position:'absolute', top:isPortrait?'54vh':'30vh', left:isPortrait?'78.5vw':'75vw', height:isPortrait?'4.5vh':'6vh', width:isPortrait?'10vw':'4vw', borderRadius:'180px', padding:'0rem 0rem', backgroundColor:'#1852B1'}}>ç</button>
+                  type="checkbox"
+                  checked={unlimitedPractice}
+                  onChange={(e) => setUnlimitedPractice(e.target.checked)}
+                  className="peer hidden"
+                />
+                <span className="w-5 h-5 mr-2 border-2 border-white rounded-sm peer-checked:bg-blue-500 peer-checked:border-blue-500 transition-colors"></span>
+                Unlimited Practice
+              </label>
+      
+              <br />
+      
+              <label className="flex items-center justify-center text-white text-[1.4rem] mr-4 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={strictAccents}
+                  onChange={(e) => setStrictAccents(e.target.checked)}
+                  className="peer hidden"
+                />
+                <span className="w-5 h-5 mr-2 border-2 border-white rounded-sm peer-checked:bg-blue-500 peer-checked:border-blue-500 transition-colors"></span>
+                Strict Accents
+              </label>
+      
+              <br />
+      
+              <label className="flex items-center justify-center text-white text-[1.4rem] mr-4 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={leaderboardMode}
+                  onChange={(e) => setLeaderboardMode(e.target.checked)}
+                  className="peer hidden"
+                />
+                <span className="w-5 h-5 mr-2 border-2 border-white rounded-sm peer-checked:bg-blue-500 peer-checked:border-blue-500 transition-colors"></span>
+                Leaderboard Mode
+              </label>
+      
+              <br />
+      
+              <button
+                onClick={() => {
+                  setMenu('drill');
+                  nextQuestion();
+                }}
+                style={{
+                  position: 'absolute',
+                  top: isPortrait ? '78vh' : '75vh',
+                  left: isPortrait ? '32.5vw' : '42.5vw',
+                  width: isPortrait ? '35vw' : '15vw',
+                  height: isPortrait ? '7vh' : '9vh',
+                }}
+              >
+                Start
+              </button>
             </div>
-        </div>
-      )}
+          )}
+      
+          {menu === 'drill' && (
+            <div>
+              <ProgressBar percentage={progress.percentage} />
+              <p className={styles.pointsText}>
+                {progress.points} points ({progress.correctAnswers}/{progress.questionsAnswered})
+              </p>
+      
+              <div className={styles.verbDrillContainer}>
+                <div
+                  className={styles.verbDrillBackground}
+                  style={{
+                    width: isPortrait ? '84vw' : '30vw',
+                    height: isPortrait ? '27vh' : '50vh',
+                    left: isPortrait ? '8vw' : '14vw',
+                    top: '25vh',
+                  }}
+                >
+                  {!isPortrait && <div style={{ height: "5vh" }} />}
+                  <p style={{ fontSize: isPortrait ? '1.8rem' : '2.4rem', fontWeight: '500' }}>
+                    {capitalise(verbInfo.infinitive)}
+                  </p>
+                  <p style={{ fontSize: '1.2rem', fontWeight: '50' }}>{verbInfo.translation}</p>
+                  <br />
+                  <p style={{
+                    fontSize: isPortrait ? '1.4rem' : '1.9rem',
+                    backgroundColor: '#191A27',
+                    borderRadius: '15px'
+                  }}>
+                    {verbInfo.tense}
+                  </p>
+                  {!isPortrait && <br />}
+                  <p style={{ fontSize: isPortrait ? '1.8rem' : '2.4rem', fontWeight: '400' }}>
+                    {checkButton ? '' : (verbInfo.tense !== "Imperative" ? capitalise(verbInfo.pronoun) : '') + ' ' + capitalise(verbInfo.answer)}
+                  </p>
+                </div>
+      
+                <p style={{
+                  fontSize: '1.6rem',
+                  position: 'absolute',
+                  left: isPortrait ? '2vw' : '46vw',
+                  top: isPortrait ? '61vh' : '47.5vh'
+                }}>
+                  {verbInfo.pronoun}
+                </p>
+      
+                <input
+                  ref={inputRef}
+                  type="text"
+                  className={styles.verbDrillInput}
+                  style={{
+                    position: "absolute",
+                    width: isPortrait ? "65vw" : "25vw",
+                    height: isPortrait ? '8vh' : "12vh",
+                    left: isPortrait ? "20vw" : "52vw",
+                    top: isPortrait ? "60vh" : "44vh"
+                  }}
+                  value={inputValue}
+                  onChange={(e) => setInputValue(e.target.value)}
+                  disabled={inputDisabled}
+                  onMouseEnter={handleMouseEnter}
+                />
+
+                {(progress.questionsAnswered < selectedNum || unlimitedPractice)?
+                <button
+                  onClick={nextQuestion}
+                  onKeyDown={handleKeyDown}
+                  style={{
+                    width: isPortrait ? '40vw' : '20vw',
+                    height: isPortrait ? '8vh' : '10vh',
+                    position: 'absolute',
+                    top: '76vh',
+                    left: isPortrait ? '30vw' : '54.5vw'
+                  }}
+                >
+                  {checkButton ? 'Check' : 'Next'}
+                </button>:<></>}
+      
+                {!checkButton ? (
+                  <button
+                    onClick={() => setEndWarning(true)}
+                    style={{
+                      width: isPortrait ? '20vw' : '20vw',
+                      height: isPortrait ? '8vh' : '10vh',
+                      position: 'absolute',
+                      top: '76vh',
+                      left: isPortrait ? '75vw' : '78vw',
+                      background: '#B85353'
+                    }}
+                    className={styles.endButton}
+                  >
+                    End
+                  </button>
+                ) : (
+                  <></>
+                )}
+      
+                {/* Correct answer message */}
+                <div className={styles.correctPopup} style={{
+                  alignItems: 'center',
+                  display: "flex",
+                  flexDirection: 'column',
+                  position: "absolute",
+                  width: isPortrait ? "65vw" : "25vw",
+                  height: isPortrait ? `${3 * correctHeight}vh` : `${6 * correctHeight}vh`,
+                  left: isPortrait ? "20vw" : "52vw",
+                  top: isPortrait ? "63vh" : "50vh"
+                }}>
+                  <Image
+                    src="/images/greenCheck.png"
+                    alt="Correct"
+                    width={30}
+                    height={30}
+                    style={{ marginTop: 'auto', paddingBottom: isPortrait ? '0vh' : '1vh' }}
+                  />
+                </div>
+      
+                {/* Incorrect answer message */}
+                <div className={styles.incorrectPopup} style={{
+                  alignItems: 'center',
+                  display: "flex",
+                  flexDirection: 'column',
+                  position: "absolute",
+                  width: isPortrait ? "65vw" : "25vw",
+                  height: isPortrait ? `${3 * incorrectHeight}vh` : `${6 * incorrectHeight}vh`,
+                  left: isPortrait ? "20vw" : "52vw",
+                  top: isPortrait ? "63vh" : "50vh"
+                }}>
+                  <Image
+                    src="/images/redCross.png"
+                    alt="Incorrect"
+                    width={30}
+                    height={30}
+                    style={{ marginTop: 'auto', paddingBottom: isPortrait ? '0vh' : '1vh' }}
+                  />
+                </div>
+      
+                {/* Accent buttons */}
+                {["é", "è", "ê", "î", "û", "ç"].map((accent, i) => (
+                  <button
+                    key={accent}
+                    onClick={() => addAccent(accent)}
+                    style={{
+                      position: 'absolute',
+                      top: isPortrait ? '54vh' : '30vh',
+                      left: isPortrait
+                        ? `${16 + i * 12.5}vw`
+                        : `${50 + i * 5}vw`,
+                      height: isPortrait ? '4.5vh' : '6vh',
+                      width: isPortrait ? '10vw' : '4vw',
+                      borderRadius: '180px',
+                      padding: '0rem 0rem',
+                      backgroundColor: '#1852B1'
+                    }}
+                  >
+                    {accent}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+      
+          {/* End menu to review stats after drill */}
+          {menu === "end" && (
+            <>
+            <p style={{fontSize:'3rem', position:'absolute', top:'7vh'}}>Drill Completed!</p>
+            <div style={{backgroundColor:'#1c1e28', borderRadius:'15px', position:'absolute', left:isPortrait?'10vw':'5vw', top:isPortrait?'18vh':'20vh', width:isPortrait?'80vw':'42vw', height:isPortrait?'25vh':'48vh', textAlign:'center', boxShadow: '5px 5px 10px rgba(0, 0, 0, 0.5)'}}>
+                <p className={styles.statNumber} style={{fontSize:isPortrait?'3rem':'5rem', fontWeight:'500', position:'absolute', top:isPortrait?'4vh':'10vh', left:isPortrait?'6vw':'3vw'}}>{progress.percentage}%</p>
+                <p style={{fontSize:isPortrait?'1.2rem':'2rem', fontWeight:'300', position:'absolute', top:isPortrait?'15vh':'28vh', left:isPortrait?'7.5vw':'4vw'}}>Accuracy</p>
+
+                <p className={styles.statNumber} style={{fontSize:isPortrait?'3rem':'5rem', fontWeight:'500', position:'absolute', top:isPortrait?'4vh':'10vh', left:isPortrait?'35vw':'18vw'}}>{progress.points}</p>
+                <p style={{fontSize:isPortrait?'1.2rem':'2rem', fontWeight:'300', position:'absolute', top:isPortrait?'15vh':'28vh', left:isPortrait?'37.5vw':'19.2vw'}}>Points</p>
+
+                <p className={styles.statNumber} style={{fontSize:isPortrait?'3rem':'5rem', fontWeight:'500', position:'absolute', top:isPortrait?'4vh':'10vh', left:isPortrait?'64vw':'33vw'}}>{progress.questionsAnswered}</p>
+                <p style={{fontSize:isPortrait?'1.2rem':'2rem', fontWeight:'300', position:'absolute', top:isPortrait?'15vh':'28vh', left:isPortrait?'58vw':'29vw'}}>Verbs Practiced</p>
+            </div>
+
+            <div style={{backgroundColor:'#1c1e28', borderRadius:'15px', position:'absolute', left:isPortrait?'10vw':'53vw', top:isPortrait?'46vh':'20vh', width:isPortrait?'80vw':'42vw', height:isPortrait?'25vh':'48vh', textAlign:'center', boxShadow: '5px 5px 10px rgba(0, 0, 0, 0.5)'}}>
+
+            </div>
+
+            <button style={{position:'absolute', top:'75vh', left:isPortrait?'25vw':'40vw', height:'8vh', width:isPortrait?'50vw':'20vw'}} onClick={() => resetStats()}>Start New Drill</button>
+            </>
+          )}
+
+          {/*  Shows warning before going to end menu after drill */}
+          {endWarning?(<div 
+    style={{
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      width: '100vw',
+      height: '100vh',
+      backdropFilter: 'blur(8px)',
+      backgroundColor: 'rgba(0, 0, 0, 0.5)',
+      zIndex: 50,
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center'
+    }}
+  >
+    <div 
+      style={{
+        height: '50vh',
+        width: isPortrait ? '60vw' : '40vw',
+        backgroundColor: '#303142',
+        borderRadius: '15px',
+        padding: '1rem',
+        zIndex: 60
+      }}
+    >
+        <br></br>
+      <p style={{ fontSize: '1.5rem', textAlign: 'center', fontWeight:'600'}}>Are you sure you want to end the drill?</p>
+      <p style={{ fontSize: '1.2rem', textAlign: 'center', fontWeight:'400'}}>Your current progress will be saved.</p>
+      <br></br>
+      <br></br>
+    <button style={{position:'absolute', top:'58vh', left:isPortrait?'26vw':'36vw', width:isPortrait?'20vw':'11vw', height:isPortrait?'7vh':'9vh', padding:'0px 0px'}} onClick={() => {setMenu('end'); setEndWarning(false);}}>Yes</button>
+    <button style={{position:'absolute', top:'58vh', left:isPortrait?'54vw':'53vw', width:isPortrait?'20vw':'11vw', height:isPortrait?'7vh':'9vh', padding:'0px 0px'}} onClick={() => setEndWarning(false)}>Cancel</button>
     </div>
-  );
-}
+  </div>)
+          :<></>}
+        </div>
+      )};

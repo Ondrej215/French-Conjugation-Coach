@@ -20,7 +20,7 @@ const ProgressBar: React.FC<ProgressBarProps> = ({ percentage }) => {
           width: "70vw", // Set width as per your need
           height: "5vh",
           display: "flex", // Use flex to align the green and red portions in one row
-          zIndex: 999, // Ensure the progress bar stays on top of other content
+          zIndex: 20, // Ensure the progress bar stays on top of other content
         }}
       >
         {/* Green portion of the progress bar */}
