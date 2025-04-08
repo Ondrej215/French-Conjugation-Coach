@@ -45,6 +45,55 @@ export default function Home() {
   const [capsLockOn, setCapsLockOn] = useState<boolean>(false);
   const [endWarning, setEndWarning] = useState<boolean>(false);
 
+  const [mostQuestions, setMostQuestions] = useState({ name: '', value: 0 });
+const [mostAccurate, setMostAccurate] = useState({ name: '', value: 0 });
+const [leastAccurate, setLeastAccurate] = useState({ name: '', value: 0 });
+
+  // track user stats for each tense
+  const [present, setPresent] = useState({
+    numQuestions: 0,
+    numCorrect: 0
+  })
+
+  const [imperfect, setImperfect] = useState({
+    numQuestions: 0,
+    numCorrect: 0
+  })
+
+  const [past, setPast] = useState({
+    numQuestions: 0,
+    numCorrect: 0
+  })
+
+  const [future, setFuture] = useState({
+    numQuestions: 0,
+    numCorrect: 0
+  })
+
+  const [conditional, setConditional] = useState({
+    numQuestions: 0,
+    numCorrect: 0
+  })
+
+  const [imperative, setImperative] = useState({
+    numQuestions: 0,
+    numCorrect: 0
+  })
+
+  const [participle, setParticiple] = useState({
+    numQuestions: 0,
+    numCorrect: 0
+  })
+
+  const [subjunctive, setSubjunctive] = useState({
+    numQuestions: 0,
+    numCorrect: 0
+  })
+
+  const removeAccents = (str: string) => {
+    return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+  };
+
   function capitalise(str: string): string {
     return str.charAt(0).toUpperCase() + str.slice(1);
   }
@@ -656,9 +705,55 @@ useEffect(() => {
         }else {
             setInputDisabled(true);
 
-            const answer = normaliseInput(inputValue);
+            if (verbInfo.tense === "Present"){
+                setPresent(prev => ({
+                    ...prev,
+                    numQuestions: prev.numQuestions + 1
+                  }));
+            }else if (verbInfo.tense === "Imperfect"){
+                setImperfect(prev => ({
+                    ...prev,
+                    numQuestions: prev.numQuestions + 1
+                  }));
+            }else if (verbInfo.tense === "Past Participle"){
+                setPast(prev => ({
+                    ...prev,
+                    numQuestions: prev.numQuestions + 1
+                  }));
+            }else if (verbInfo.tense === "Future Simple"){
+                setFuture(prev => ({
+                    ...prev,
+                    numQuestions: prev.numQuestions + 1
+                  }));
+            }else if (verbInfo.tense === "Conditional"){
+                setConditional(prev => ({
+                    ...prev,
+                    numQuestions: prev.numQuestions + 1
+                  }));
+            }else if (verbInfo.tense === "Subjunctive"){
+                setSubjunctive(prev => ({
+                    ...prev,
+                    numQuestions: prev.numQuestions + 1
+                  }));
+            }else if (verbInfo.tense === "Present Participle"){
+                setParticiple(prev => ({
+                    ...prev,
+                    numQuestions: prev.numQuestions + 1
+                  }));
+            }else  if (verbInfo.tense === "Imperative"){
+                setImperative(prev => ({
+                    ...prev,
+                    numQuestions: prev.numQuestions + 1
+                  }));
+            }
 
-            if (answer === verbInfo.answer){
+            let answer:string = normaliseInput(inputValue)
+
+            if (!strictAccents){
+                answer = removeAccents(normaliseInput(inputValue))
+            }
+
+            if (answer === (strictAccents?verbInfo.answer:removeAccents(verbInfo.answer))){
 
                 setCorrectHeight(isPortrait?3:2);
 
@@ -669,6 +764,49 @@ useEffect(() => {
                     percentage: Math.round((prevProgress.correctAnswers + 1) / (prevProgress.questionsAnswered + 1) * 100),
                     points: prevProgress.points + ((prevProgress.questionsAnswered < 10)?10:5)
                 }))
+
+                if (verbInfo.tense === "Present"){
+                    setPresent(prev => ({
+                        ...prev,
+                        numCorrect: prev.numCorrect + 1
+                      }));
+                }else if (verbInfo.tense === "Imperfect"){
+                    setImperfect(prev => ({
+                        ...prev,
+                        numCorrect: prev.numCorrect + 1
+                      }));
+                }else if (verbInfo.tense === "Past Participle"){
+                    setPast(prev => ({
+                        ...prev,
+                        numCorrect: prev.numCorrect + 1
+                      }));
+                }else if (verbInfo.tense === "Future Simple"){
+                    setFuture(prev => ({
+                        ...prev,
+                        numCorrect: prev.numCorrect + 1
+                      }));
+                }else if (verbInfo.tense === "Conditional"){
+                    setConditional(prev => ({
+                        ...prev,
+                        numCorrect: prev.numCorrect + 1
+                      }));
+                }else if (verbInfo.tense === "Subjunctive"){
+                    setSubjunctive(prev => ({
+                        ...prev,
+                        numCorrect: prev.numCorrect + 1
+                      }));
+                }else if (verbInfo.tense === "Present Participle"){
+                    setParticiple(prev => ({
+                        ...prev,
+                        numCorrect: prev.numCorrect + 1
+                      }));
+                }else  if (verbInfo.tense === "Imperative"){
+                    setImperative(prev => ({
+                        ...prev,
+                        numCorrect: prev.numCorrect + 1
+                      }));
+                }
+    
             }else {
 
                 setIncorrectHeight(isPortrait?3:2);
@@ -708,7 +846,90 @@ useEffect(() => {
             correctAnswers: 0,
             percentage: 100,
           });
+
+        setPresent({
+            numQuestions: 0,
+            numCorrect:0
+        });
+
+        setImperfect({
+            numQuestions: 0,
+            numCorrect:0
+        });
+
+        setPast({
+            numQuestions: 0,
+            numCorrect:0
+        });
+
+        setFuture({
+            numQuestions: 0,
+            numCorrect:0
+        });
+
+        setConditional({
+            numQuestions: 0,
+            numCorrect:0
+        });
+
+        setParticiple({
+            numQuestions: 0,
+            numCorrect:0
+        });
+
+        setImperative({
+            numQuestions: 0,
+            numCorrect:0
+        });
+
+        setSubjunctive({
+            numQuestions: 0,
+            numCorrect:0
+        });
     }
+
+    const updateTenseStats = () => {
+  const tenses = {
+    present,
+    imperfect,
+    past,
+    future,
+    conditional,
+    imperative,
+    participle,
+    subjunctive
+  };
+
+  const sortedTenses = Object.entries(tenses).sort(
+    (a, b) => b[1].numQuestions - a[1].numQuestions
+  );
+
+  let mostQ = { name: '', value: -Infinity };
+  let mostA = { name: '', value: -Infinity };
+  let leastA = { name: '', value: Infinity };
+
+  for (const [name, data] of sortedTenses) {
+    const { numQuestions, numCorrect } = data;
+
+    if (numQuestions > mostQ.value) {
+      mostQ = { name, value: numQuestions };
+    }
+
+    const accuracy = (numQuestions > 0) ? (numCorrect / numQuestions) * 100 : 0;
+
+    if (numQuestions > 0 && accuracy > mostA.value) {
+      mostA = { name, value: accuracy };
+    }
+
+    if (numQuestions > 0 && accuracy < leastA.value) {
+      leastA = { name, value: accuracy };
+    }
+  }
+
+  setMostQuestions(mostQ);
+  setMostAccurate(mostA);
+  setLeastAccurate(leastA);
+};
 
     return (
         <div className={`${styles.container} ${styles.wrapper}`}>
@@ -995,7 +1216,21 @@ useEffect(() => {
             </div>
 
             <div style={{backgroundColor:'#1c1e28', borderRadius:'15px', position:'absolute', left:isPortrait?'10vw':'53vw', top:isPortrait?'46vh':'20vh', width:isPortrait?'80vw':'42vw', height:isPortrait?'25vh':'48vh', textAlign:'center', boxShadow: '5px 5px 10px rgba(0, 0, 0, 0.5)'}}>
+                <p style={{fontSize:isPortrait?'0.8rem':'1.4rem', fontWeight:'300'}}>Most Practiced Tense</p>
 
+                <p className={styles.statNumber} style={{fontSize:isPortrait?'1rem':'2.6rem', fontWeight:'500'}}>{capitalise(mostQuestions.name)} ({mostQuestions.value} Qs)</p>
+
+                <br></br>
+
+                <p style={{fontSize:isPortrait?'0.8rem':'1.4rem', fontWeight:'300'}}>Most Accurate Tense</p>
+
+                <p className={styles.statNumber} style={{fontSize:isPortrait?'1rem':'2.6rem', fontWeight:'500'}}>{capitalise(mostAccurate.name)} ({mostAccurate.value}%)</p>
+
+                <br></br>
+
+                <p style={{fontSize:isPortrait?'0.8rem':'1.4rem', fontWeight:'300'}}>Least Accurate Tense</p>
+
+                <p className={styles.statNumber} style={{fontSize:isPortrait?'1rem':'2.6rem', fontWeight:'500'}}>{capitalise(leastAccurate.name)} ({leastAccurate.value}%)</p>
             </div>
 
             <button style={{position:'absolute', top:'75vh', left:isPortrait?'25vw':'40vw', height:'8vh', width:isPortrait?'50vw':'20vw'}} onClick={() => resetStats()}>Start New Drill</button>
@@ -1033,7 +1268,7 @@ useEffect(() => {
       <p style={{ fontSize: '1.2rem', textAlign: 'center', fontWeight:'400'}}>Your current progress will be saved.</p>
       <br></br>
       <br></br>
-    <button style={{position:'absolute', top:'58vh', left:isPortrait?'26vw':'36vw', width:isPortrait?'20vw':'11vw', height:isPortrait?'7vh':'9vh', padding:'0px 0px'}} onClick={() => {setMenu('end'); setEndWarning(false);}}>Yes</button>
+    <button style={{position:'absolute', top:'58vh', left:isPortrait?'26vw':'36vw', width:isPortrait?'20vw':'11vw', height:isPortrait?'7vh':'9vh', padding:'0px 0px'}} onClick={() => {setMenu('end'); setEndWarning(false); updateTenseStats();}}>Yes</button>
     <button style={{position:'absolute', top:'58vh', left:isPortrait?'54vw':'53vw', width:isPortrait?'20vw':'11vw', height:isPortrait?'7vh':'9vh', padding:'0px 0px'}} onClick={() => setEndWarning(false)}>Cancel</button>
     </div>
   </div>)
