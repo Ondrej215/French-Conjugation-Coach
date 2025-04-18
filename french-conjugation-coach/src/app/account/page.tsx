@@ -23,7 +23,9 @@ export default function Account(){
   
     if (loading || !session) return null;
 
+
     const handleLogout = async () => {
+      await supabase.auth.refreshSession();
       const { error } = await supabase.auth.signOut();
       if (error) {
         console.error('Logout error:', error.message);

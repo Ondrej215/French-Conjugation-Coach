@@ -1068,7 +1068,7 @@ if (fetchClassError) {
         <div className={`${styles.container} ${styles.wrapper}`}>
 
 {(session === null)?
-          <p style={{ fontSize:'1rem', alignContent:'center',borderRadius:'10px', backgroundColor:'red', position:'absolute', top:isPortrait?'70vh':'75vh', left:isPortrait?'7vw':'15vw', height:isPortrait?'20vh':'10vh', width:isPortrait?'18vw':'20vw', textAlign:'center'}}>You are not logged in! Progress will not be saved.</p>:<></>}
+          <p style={{ fontSize:'1rem', alignContent:'center',borderRadius:'10px', backgroundColor:'red', position:'absolute', top:isPortrait?'68vh':'75vh', left:isPortrait?'7vw':'15vw', height:isPortrait?'20vh':'10vh', width:isPortrait?'18vw':'20vw', textAlign:'center'}}>You are not logged in! Progress will not be saved.</p>:<></>}
       
           {menu === 'home' && (
             <div className={styles.background}>
