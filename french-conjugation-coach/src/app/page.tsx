@@ -4,6 +4,7 @@ import { useState, useEffect , useRef} from "react";
 import Image from "next/image";
 import ProgressBar from "../../components/ProgressBar";
 import { supabase } from "../../lib/supabaseClient";
+import { useSession } from '../../hooks/useSession';
 
 export default function Home() {
   const [selectedNum, setSelectedNum] = useState<number>(10);
@@ -44,6 +45,7 @@ export default function Home() {
   const [incorrectHeight, setIncorrectHeight] = useState<number>(1);
   const [capsLockOn, setCapsLockOn] = useState<boolean>(false);
   const [endWarning, setEndWarning] = useState<boolean>(false);
+  const { session, loading } = useSession();
 
   const [mostQuestions, setMostQuestions] = useState({ name: '', value: 0 });
 const [mostAccurate, setMostAccurate] = useState({ name: '', value: 0 });
@@ -192,7 +194,7 @@ useEffect(() => {
     focusInput();
   }, [inputDisabled]);
 
-  if (isPortrait === null) {
+  if (isPortrait === null || loading) {
     return <div>Loading...</div>; // Show loading state while determining the initial layout
   }
 
@@ -888,7 +890,7 @@ useEffect(() => {
         });
     }
 
-    const updateTenseStats = () => {
+    const updateTenseStats = async () => {
   const tenses = {
     present,
     imperfect,
@@ -903,47 +905,170 @@ useEffect(() => {
   const sortedTenses = Object.entries(tenses).sort(
     (a, b) => b[1].numQuestions - a[1].numQuestions
   );
-
+  
   let mostQ = { name: '', value: -Infinity };
   let mostA = { name: '', value: -Infinity };
   let leastA = { name: '', value: Infinity };
-
+  
+  // First pass: go through sortedTenses (from most to least questions)
   for (const [name, data] of sortedTenses) {
     const { numQuestions, numCorrect } = data;
-
+  
     if (numQuestions > mostQ.value) {
       mostQ = { name, value: numQuestions };
     }
-
-    const accuracy = (numQuestions > 0) ? (numCorrect / numQuestions) * 100 : 0;
-
+  
+    const accuracy = numQuestions > 0 ? (numCorrect / numQuestions) * 100 : 0;
+  
     if (numQuestions > 0 && accuracy > mostA.value) {
-      mostA = { name, value: accuracy };
+      mostA = { name, value: Math.round(accuracy) };
     }
+  }
+  
+  // Second pass: sort from least to most questions, then get leastA
+  const ascendingTenses = [...sortedTenses].sort(
+    (a, b) => a[1].numQuestions - b[1].numQuestions
+  );
+  
+  for (const [name, data] of ascendingTenses) {
+    const { numQuestions, numCorrect } = data;
+  
+    if (numQuestions === 0) continue;
 
-    if (numQuestions > 0 && accuracy < leastA.value) {
-      leastA = { name, value: accuracy };
+  
+    const accuracy = (numCorrect / numQuestions) * 100;
+  
+    if (accuracy < leastA.value) {
+      leastA = { name, value: Math.round(accuracy) };
     }
   }
 
   setMostQuestions(mostQ);
   setMostAccurate(mostA);
   setLeastAccurate(leastA);
+
+  // update database, fetch data then update it by adding on new score
+  if (!!session){
+    const { data, error: fetchError } = await supabase
+  .from('TBLstudent')
+  .select('*')
+  .eq('student_id', session.user.id)
+  .single();
+
+  if (fetchError) {
+    console.error('Fetch failed:', fetchError);
+  } else {
+    const newScore = data.total_score + progress.points;
+    const newPresentQs = data.present_questions + present.numQuestions;
+    const newPresentAs = data.present_corrects + present.numCorrect;
+    const newImperfectQs = data.imperfect_questions + imperfect.numQuestions;
+    const newImperfectAs = data.imperfect_corrects + imperfect.numCorrect;
+    const newPastQs = data.past_questions + past.numQuestions;
+    const newPastAs = data.past_corrects + past.numCorrect;
+    const newFutureQs = data.future_questions + future.numQuestions;
+    const newFutureAs = data.future_corrects + future.numCorrect;
+    const newParticipleQs = data.participle_questions + participle.numQuestions;
+    const newParticipleAs = data.participle_corrects + participle.numCorrect;
+    const newImperativeQs = data.imperative_questions + imperative.numQuestions;
+    const newImperativeAs = data.imperative_corrects + imperative.numCorrect;
+    const newSubjunctiveQs = data.subjunctive_questions + subjunctive.numQuestions;
+    const newSubjunctiveAs = data.subjunctive_corrects + subjunctive.numCorrect;
+    const newConditionalQs = data.conditional_questions + conditional.numQuestions;
+    const newConditionalAs = data.conditional_corrects + conditional.numCorrect;
+
+    const { error: updateError } = await supabase
+    .from('TBLstudent')
+    .update({ 
+      total_score: newScore,
+      present_questions: newPresentQs,
+      present_corrects: newPresentAs,
+      imperfect_questions: newImperfectQs,
+      imperfect_corrects: newImperfectAs,
+      past_questions: newPastQs,
+      past_corrects: newPastAs,
+      future_questions: newFutureQs,
+      future_corrects: newFutureAs,
+      participle_questions: newParticipleQs,
+      participle_corrects: newParticipleAs,
+      imperative_questions: newImperativeQs,
+      imperative_corrects: newImperativeAs,
+      subjunctive_questions: newSubjunctiveQs,
+      subjunctive_corrects: newSubjunctiveAs,
+      conditional_questions: newConditionalQs,
+      conditional_corrects: newConditionalAs,
+     })
+    .eq('student_id', session.user.id);
+
+    if (updateError) console.error('Update failed:', updateError);
+  }
+
+  const { data: classRows, error: fetchClassError } = await supabase
+  .from('TBLstudentclass')
+  .select('*')
+  .eq('student_id', session.user.id);
+
+if (fetchClassError) {
+  console.error('Fetch class rows failed:', fetchClassError);
+} else {
+  for (const row of classRows) {
+    // check class rules
+
+    const newScore = row.score + progress.points;
+    const newPresentQs = row.present_questions + present.numQuestions;
+    const newPresentAs = row.present_corrects + present.numCorrect;
+    const newImperfectQs = row.imperfect_questions + imperfect.numQuestions;
+    const newImperfectAs = row.imperfect_corrects + imperfect.numCorrect;
+    const newPastQs = row.past_questions + past.numQuestions;
+    const newPastAs = row.past_corrects + past.numCorrect;
+    const newFutureQs = row.future_questions + future.numQuestions;
+    const newFutureAs = row.future_corrects + future.numCorrect;
+    const newParticipleQs = row.participle_questions + participle.numQuestions;
+    const newParticipleAs = row.participle_corrects + participle.numCorrect;
+    const newImperativeQs = row.imperative_questions + imperative.numQuestions;
+    const newImperativeAs = row.imperative_corrects + imperative.numCorrect;
+    const newSubjunctiveQs = row.subjunctive_questions + subjunctive.numQuestions;
+    const newSubjunctiveAs = row.subjunctive_corrects + subjunctive.numCorrect;
+    const newConditionalQs = row.conditional_questions + conditional.numQuestions;
+    const newConditionalAs = row.conditional_corrects + conditional.numCorrect;
+
+
+    const { error: updateClassError } = await supabase
+      .from('TBLstudentclass')
+      .update({ 
+        score: newScore, 
+        present_questions: newPresentQs,
+        present_corrects: newPresentAs,
+        imperfect_questions: newImperfectQs,
+        imperfect_corrects: newImperfectAs,
+        past_questions: newPastQs,
+        past_corrects: newPastAs,
+        future_questions: newFutureQs,
+        future_corrects: newFutureAs,
+        participle_questions: newParticipleQs,
+        participle_corrects: newParticipleAs,
+        imperative_questions: newImperativeQs,
+        imperative_corrects: newImperativeAs,
+        subjunctive_questions: newSubjunctiveQs,
+        subjunctive_corrects: newSubjunctiveAs,
+        conditional_questions: newConditionalQs,
+        conditional_corrects: newConditionalAs, })
+      .eq('student_id', session.user.id)
+      .eq('class_id', row.class_id);
+
+    if (updateClassError) {
+      console.error(`Update failed for class_id ${row.class_id}:`, updateClassError);
+    }
+  }
+}
+
+  }
 };
 
     return (
         <div className={`${styles.container} ${styles.wrapper}`}>
-      
-          {/*This always appears*/}
-          <div className={styles.topWrapper}>
-            <Image 
-              src="/images/FranceFlag.jpeg" 
-              alt="France Flag" 
-              width={60} 
-              height={35}
-              style={{ borderRadius: '5px' }}
-            />
-          </div>
+
+{(session === null)?
+          <p style={{ fontSize:'1rem', alignContent:'center',borderRadius:'10px', backgroundColor:'red', position:'absolute', top:isPortrait?'70vh':'75vh', left:isPortrait?'7vw':'15vw', height:isPortrait?'20vh':'10vh', width:isPortrait?'18vw':'20vw', textAlign:'center'}}>You are not logged in! Progress will not be saved.</p>:<></>}
       
           {menu === 'home' && (
             <div className={styles.background}>
@@ -958,7 +1083,7 @@ useEffect(() => {
       
                 <div className="flex justify-center">
                   <select
-                    className={`${styles.dropdown} ${unlimitedPractice ? 'opacity-50 cursor-not-allowed' : ''}`}
+                    className={`${unlimitedPractice ? 'opacity-50 cursor-not-allowed' : ''}`}
                     value={selectedNum}
                     onChange={(e) => setSelectedNum(Number(e.target.value))}
                     disabled={unlimitedPractice}
@@ -1087,7 +1212,6 @@ useEffect(() => {
                 <input
                   ref={inputRef}
                   type="text"
-                  className={styles.verbDrillInput}
                   style={{
                     position: "absolute",
                     width: isPortrait ? "65vw" : "25vw",

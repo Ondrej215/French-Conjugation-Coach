@@ -1,0 +1,9 @@
+.scrollableClass{
+    height: 100vh;
+    overflow-y:auto;
+}
+
+.linkText{
+    user-select: none;
+    outline: none;
+}

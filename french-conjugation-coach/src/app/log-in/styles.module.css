@@ -1,0 +1,9 @@
+.Link{
+    transition: color 0.2s ease, transform 0.2s ease;
+    color:white;
+}
+
+.Link:hover{
+    color:rgb(36, 100, 238);
+    transform: scale(1.05);
+}
