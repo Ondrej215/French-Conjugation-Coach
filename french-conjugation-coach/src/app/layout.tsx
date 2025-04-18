@@ -79,7 +79,7 @@ export default function RootLayout({
             </Link>
           </div>
 
-        {children}
+          <main>{children}</main>
         <footer>
         <Link href="https://portfolio-website-amber-pi.vercel.app/" target="_blank">© {new Date().getFullYear()} Ondrej Vamos. All rights reserved.</Link>
         </footer>
