@@ -45,7 +45,7 @@ export default function Home() {
   const [incorrectHeight, setIncorrectHeight] = useState<number>(1);
   const [capsLockOn, setCapsLockOn] = useState<boolean>(false);
   const [endWarning, setEndWarning] = useState<boolean>(false);
-  const { session, loading } = useSession();
+  const { session, loading, role, accountInfo } = useSession();
 
   const [mostQuestions, setMostQuestions] = useState({ name: '', value: 0 });
 const [mostAccurate, setMostAccurate] = useState({ name: '', value: 0 });
@@ -948,7 +948,7 @@ useEffect(() => {
   setLeastAccurate(leastA);
 
   // update database, fetch data then update it by adding on new score
-  if (!!session){
+  if (!!session && role==='student'){
     const { data, error: fetchError } = await supabase
   .from('TBLstudent')
   .select('*')
@@ -1069,6 +1069,8 @@ if (fetchClassError) {
 
 {(session === null)?
           <p style={{ fontSize:'1rem', alignContent:'center',borderRadius:'10px', backgroundColor:'red', position:'absolute', top:isPortrait?'68vh':'75vh', left:isPortrait?'7vw':'15vw', height:isPortrait?'20vh':'10vh', width:isPortrait?'18vw':'20vw', textAlign:'center'}}>You are not logged in! Progress will not be saved.</p>:<></>}
+
+{(role === 'teacher')? <p style={{ fontSize:'1rem', alignContent:'center',borderRadius:'10px', backgroundColor:'red', position:'absolute', top:isPortrait?'68vh':'75vh', left:isPortrait?'7vw':'15vw', height:isPortrait?'20vh':'10vh', width:isPortrait?'18vw':'20vw', textAlign:'center'}}>Your progress will not be saved on a teacher account.</p>:<></>}
       
           {menu === 'home' && (
             <div className={styles.background}>

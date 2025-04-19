@@ -54,11 +54,11 @@ export default function LogIn(){
     <p style={{fontSize:'2.5rem', fontWeight:'500', position:'absolute', left:'0vw', width:'100vw', textAlign:'center', top:'10vh'}}>Log In</p>
     <div style={{background:'#1c1e28', position:'absolute', left:isPortrait?'5vw':'30vw', top:'20vh', width:isPortrait?'90vw':'40vw', height:'50vh', borderRadius:'15px'}}>
         
-        <p style={{fontSize:isPortrait?'1.2rem':'1.6rem', position:'absolute', left:isPortrait?'3vw':'2vw', top:isPortrait?'6.5vh':'6vh'}}>Username</p>
-        <input value={usernameInput} onChange={e => setUsernameInput(e.target.value)} style={{position:'absolute', left:isPortrait?'23vw':'15vw', top:isPortrait?'5vh':'5vh', width:isPortrait?'55vw':'20vw', height:'8vh'}}/>
+        <p style={{fontSize:isPortrait?'1rem':'1.6rem', position:'absolute', left:isPortrait?'3vw':'2vw', top:'5vh', height:'8vh', alignContent:'center'}}>Username</p>
+        <input value={usernameInput} onChange={e => setUsernameInput(e.target.value)} style={{position:'absolute', left:isPortrait?'28vw':'15vw', top:'5vh', width:isPortrait?'55vw':'20vw', height:'8vh'}}/>
 
-        <p style={{fontSize:isPortrait?'1.2rem':'1.6rem', position:'absolute', left:isPortrait?'3vw':'2vw', top:isPortrait?'19.5vh':'19vh'}}>Password</p>
-        <input type="password" value={passwordInput} onChange={e => setPasswordInput(e.target.value)}  style={{position:'absolute', left:isPortrait?'23vw':'15vw', top:isPortrait?'18vh':'18vh', width:isPortrait?'55vw':'20vw', height:'8vh'}}/>
+        <p style={{fontSize:isPortrait?'1rem':'1.6rem', position:'absolute', left:isPortrait?'3vw':'2vw', top:'18vh', height:'8vh', alignContent:'center'}}>Password</p>
+        <input type="password" value={passwordInput} onChange={e => setPasswordInput(e.target.value)}  style={{position:'absolute', left:isPortrait?'28vw':'15vw', top:'18vh', width:isPortrait?'55vw':'20vw', height:'8vh'}}/>
    
         <button onClick={logInButton} style={{position:'absolute', left:isPortrait?'28vw':'13.5vw', top:'40vh', width:isPortrait?'35vw':'13vw', height:'6vh'}}>Confirm</button>
     </div>

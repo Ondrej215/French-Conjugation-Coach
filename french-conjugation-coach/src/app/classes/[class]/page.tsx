@@ -70,10 +70,58 @@ export default function ClassPage() {
         return;
       }
 
-      const flatData = data.map(({ TBLstudent, ...rest }) => ({
-        ...rest,
-        student_name: TBLstudent?.student_name ?? 'Unknown',
-      }));
+      const flatData = data.map(({ TBLstudent, ...rest }) => {
+        const {
+          present_questions = 0,
+          imperfect_questions = 0,
+          future_questions = 0,
+          past_questions = 0,
+          participle_questions = 0,
+          imperative_questions = 0,
+          subjunctive_questions = 0,
+          conditional_questions = 0,
+    
+          present_corrects = 0,
+          imperfect_corrects = 0,
+          future_corrects = 0,
+          past_corrects = 0,
+          participle_corrects = 0,
+          imperative_corrects = 0,
+          subjunctive_corrects = 0,
+          conditional_corrects = 0,
+        } = rest;
+    
+        const totalQuestions =
+          present_questions +
+          imperfect_questions +
+          future_questions +
+          past_questions +
+          participle_questions +
+          imperative_questions +
+          subjunctive_questions +
+          conditional_questions;
+    
+        const totalCorrects =
+          present_corrects +
+          imperfect_corrects +
+          future_corrects +
+          past_corrects +
+          participle_corrects +
+          imperative_corrects +
+          subjunctive_corrects +
+          conditional_corrects;
+    
+        return {
+          ...rest,
+          student_name: TBLstudent?.student_name ?? 'Unknown',
+          totalQuestions,
+          totalCorrects,
+        };
+      });
+
+      // sort students by their score
+      flatData.sort((a, b) => b.score - a.score);
+    
       setStudents(flatData);
     };
 
@@ -82,6 +130,10 @@ export default function ClassPage() {
       getClassStudents();
     }
   }, [classId, session]);
+
+  useEffect(() => {
+    console.log(students)
+  }, [students])
 
   // Check if user is authorized to stay on the page
   useEffect(() => {
@@ -138,17 +190,66 @@ export default function ClassPage() {
         <p style={{ fontSize: '1.7rem', textAlign: 'center', fontWeight: '300', marginTop: '2vh' }}>
         Teacher - {teacherName}
         </p>
-        <div style={{height:'10vh', backgroundColor:'#161623', marginTop:'5vh', justifyContent:'center', alignItems:'center', gap:'5vw', display:'flex'}}>
-            <p className={styles.linkText} role="button" onClick={() => {setClassMenu('leaderboard')}} style={{fontSize:(classMenu==="leaderboard")?'1.8rem':'1.6rem', color:(classMenu==="leaderboard")?'#9776D0':'white', fontWeight:(classMenu==="leaderboard")?'500':'400'}}>Leaderboard</p>
-            <p className={styles.linkText} role="button" onClick={() => {setClassMenu('students')}} style={{fontSize:(classMenu==="students")?'1.8rem':'1.6rem', color:(classMenu==="students")?'#9776D0':'white', fontWeight:(classMenu==="students")?'500':'400'}}>Students</p>
-            {role==="teacher" && <p className={styles.linkText} role="button" onClick={() => {setClassMenu('settings')}} style={{fontSize:(classMenu==="settings")?'1.8rem':'1.6rem', color:(classMenu==="settings")?'#9776D0':'white', fontWeight:(classMenu==="settings")?'500':'400'}}>Settings</p>}
-        </div>
-        <div style={{ backgroundColor: '#0C0C13', width: '100%', height: '1000px', borderRadius: '15px' }}>
-            {role==='teacher' && <div style={{marginLeft:'30vw', width:'40vw', height:'10vh'}}>
-                <button style={{marginTop:'5vh', marginLeft:isPortrait?'0vw':'10vw', width:isPortrait?'40vw':'20vw', height:'6vh'}} onClick={() => {setCodeVisible(!codeVisible)}}>{codeVisible?'Hide Join Code':'Show Join Code'}</button>
-                {codeVisible && (<p style={{marginTop:'2vh', width:'40vw', fontSize:'1.5rem', fontWeight:'500', textAlign:'center'}}>{classId}</p>)}
-            </div>}
-        </div>
+        {classMenu === "leaderboard" && <div style={{ backgroundColor: '#0C0C13', width: '100%', minHeight: '100vh', borderRadius: '15px', marginTop:'5vh'}}>
+            {role==='teacher' && (<>
+                <button style={{marginTop:'5vh', marginLeft:isPortrait?'25vw':'40vw', width:isPortrait?'50vw':'20vw', height:'6vh'}}>Class Settings</button>
+            <div style={{marginLeft:'25vw', width:'50vw', height:'10vh'}}>
+                <button style={{marginTop:'5vh', marginLeft:isPortrait?'0vw':'15vw', width:isPortrait?'50vw':'20vw', height:'6vh'}} onClick={() => {setCodeVisible(!codeVisible)}}>{codeVisible?'Hide Join Code':'Show Join Code'}</button>
+                {codeVisible && (<p style={{marginTop:'2vh', width:'50vw', fontSize:'1.5rem', fontWeight:'500', textAlign:'center'}}>{classId}</p>)}
+            </div>
+            </>)}
+
+            <div style={{
+  backgroundColor: '#0C0C13',
+  borderRadius: '15px',
+  marginTop: '5vh',
+  padding: '2vh',
+  width: '90%',
+  marginLeft: 'auto',
+  marginRight: 'auto',
+}}>
+  <div style={{
+    display: 'flex',
+    justifyContent: 'space-between',
+    padding: '1vh 2vw',
+    borderBottom: '0.5vh solid #4E436B',
+    fontWeight: '600',
+    color: '#fff',
+  }}>
+    <span style={{ width: '10%' }}>Rank</span>
+    <span style={{ width: '30%' }}>Name</span>
+    <span style={{ width: '20%' }}>Score</span>
+    <span style={{ width: '20%' }}>Accuracy</span>
+    <span style={{ width: '20%' }}>Questions</span>
+  </div>
+
+  {students.map((student, index) => {
+    const accuracy = student.totalQuestions > 0
+      ? ((student.totalCorrects / student.totalQuestions) * 100).toFixed(1)
+      : '0.0';
+
+    return (
+      <div
+        key={student.student_id}
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          marginLeft:'1.5vw',
+          padding: '1vh 1vw',
+          borderBottom: '0px solid #222',
+          color: '#ccc',
+        }}
+      >
+        <span style={{ width: '10%' }}>{index + 1}</span>
+        <span style={{ width: '30%' }}>{student.student_name}</span>
+        <span style={{ width: '20%' }}>{student.score}</span>
+        <span style={{ width: '20%' }}>{accuracy}%</span>
+        <span style={{ width: '20%' }}>{student.totalQuestions}</span>
+      </div>
+    );
+  })}
+</div>
+        </div>}
     </div>
   );
 }
