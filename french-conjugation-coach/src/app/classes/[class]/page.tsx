@@ -20,6 +20,7 @@ export default function ClassPage() {
   const [teacherID, setTeacherID] = useState<string>('');
   const [codeVisible, setCodeVisible] = useState<boolean>(false);
   const [classMenu, setClassMenu] = useState<string>('leaderboard');
+  const [classData, setClassData] = useState<any>();
 
   // Handle window resize for portrait mode
   useEffect(() => {
@@ -57,6 +58,7 @@ export default function ClassPage() {
       setClassName(data.class_name);
       setTeacherName(data.TBLteacher.teacher_name);
       setTeacherID(data.teacher_id);
+      setClassData(data);
     };
 
     const getClassStudents = async () => {
@@ -199,6 +201,22 @@ export default function ClassPage() {
             </div>
             </>)}
 
+            {/* Class stats and rules, alongside on landscape, vertically on portrait */}
+            <div style={{display:isPortrait?'block':'flex', width:'100vw', justifyContent:'center', marginTop:'10vh', justifyItems:'center'}}>
+                <div style={{backgroundColor:'#1c1e28', width:isPortrait?'85vw':'40vw', height:isPortrait?'30vh':'45vh', marginTop:'4vh', borderRadius:'15px', boxShadow:'10px 10px 10px rgba(0, 0, 0, 0.5)'}}>
+
+                </div>
+                <div style={{backgroundColor:'#1c1e28', width:isPortrait?'85vw':'40vw', height:isPortrait?'30vh':'45vh', marginTop:'4vh', marginLeft:isPortrait?'0vw':'5vw', borderRadius:'15px', boxShadow:'10px 10px 10px rgba(0, 0, 0, 0.5)', textAlign:'center'}}>
+                    <p style={{fontWeight:'500', fontSize:'2rem'}}>Class Rules</p>
+                    {!isPortrait && <br></br>}
+                    {classData.accents_required === 'true' && <p style={{fontSize:isPortrait?'1.1rem':'1.5rem'}}>Strict accents must be turned on.</p>}
+                    {classData.max_points !== null && <p style={{fontSize:isPortrait?'1.1rem':'1.5rem'}}>Maximum of {classData.max_points} points per day.</p>}
+                    {classData.min_questions !== null && <p style={{fontSize:isPortrait?'1.1rem':'1.5rem'}}>Minimum of {classData.min_questions} questions per drill.</p>}
+                    <br></br>
+                    <p style={{fontSize:isPortrait?'1.1rem':'1.5rem', fontWeight:'300'}}>Only drills that meet these rules will count towards this class's leaderboard and stats.</p>
+                </div>
+            </div>
+
             <div style={{
   backgroundColor: '#0C0C13',
   borderRadius: '15px',
@@ -212,15 +230,15 @@ export default function ClassPage() {
     display: 'flex',
     justifyContent: 'space-between',
     padding: '1vh 2vw',
-    borderBottom: '0.5vh solid #4E436B',
+    borderBottom: '0.5vh solid rgb(52, 47, 72)',
     fontWeight: '600',
     color: '#fff',
   }}>
-    <span style={{ width: '10%' }}>Rank</span>
-    <span style={{ width: '30%' }}>Name</span>
-    <span style={{ width: '20%' }}>Score</span>
-    <span style={{ width: '20%' }}>Accuracy</span>
-    <span style={{ width: '20%' }}>Questions</span>
+    <span style={{ width: '10%', marginLeft:isPortrait?'-2vw':'-0.5vw', fontSize:isPortrait?'0.8rem':'1.4rem' }}>Rank</span>
+    <span style={{ width: '30%', marginLeft:isPortrait?'3vw':'1vw', fontSize:isPortrait?'0.8rem':'1.4rem' }}>Name</span>
+    <span style={{ width: '20%', marginLeft:isPortrait?'-2vw':'0vw', fontSize:isPortrait?'0.8rem':'1.4rem' }}>Score</span>
+    <span style={{ width: '20%', marginLeft:isPortrait?'0vw':'0vw' , fontSize:isPortrait?'0.8rem':'1.4rem' }}>Accuracy</span>
+    <span style={{ width: '20%', marginLeft:isPortrait?'0vw':'0vw' , fontSize:isPortrait?'0.8rem':'1.4rem' }}>Questions</span>
   </div>
 
   {students.map((student, index) => {

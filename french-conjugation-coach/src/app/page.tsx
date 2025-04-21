@@ -50,6 +50,27 @@ export default function Home() {
   const [mostQuestions, setMostQuestions] = useState({ name: '', value: 0 });
 const [mostAccurate, setMostAccurate] = useState({ name: '', value: 0 });
 const [leastAccurate, setLeastAccurate] = useState({ name: '', value: 0 });
+const [answerMessage, setAnswerMessage] = useState<string>('');
+
+const presentCorrectMessages = ["You've mastered the present tense, here's your present: points!", "Living in the moment!", "You really are thriving in the present!", "You're so in the now, it's incroyable!", "You're so in the now, it's incroyable!", "You've mastered the present tense, here's your present: points!"];
+const presentIncorrectMessages = ["Present tense? No presents here, not for that answer.", "Don't expect presents from the present tense.", "Looks like that one présented a bit of a problem.", "Looks like that one présented a bit of a problem.", "Present tense? No presents here, not for that answer."];
+const imperfectCorrectMessages = ["It's called imperfect, but your answer is totally perfect!", "Back in time, and you still nailed it!", "Back in time, and you still nailed it!", "It's called imperfect, but your answer is totally perfect!", "It's called imperfect, but your answer is totally perfect!"];
+const imperfectIncorrectMessages = ["Yeah... that was imperfect alright, just in the wrong way.", "That was imperfect in every way, let's try again!", "Yeah... that was imperfect alright, just in the wrong way.", "Yeah... that was imperfect alright, just in the wrong way.", "That was imperfect in every way, let's try again!"];
+const pastCorrectMessages = ['You have got that correct!', "Great job! Now let's leave the past behind.", "Great job! Now let's leave the past behind.", 'You have got that correct!'];
+const pastIncorrectMessages = ["Rough past? Good thing the future's bright!", "That answer is history... and not in a good way.", "That answer is history... and not in a good way.", "Rough past? Good thing the future's bright!"];
+const participleCorrectMessages = ["You're do-ing great, just like the verb form!", "That participle was particu-larly awesome!", "You're participating perfectly in this drill!", "You're do-ing great, just like the verb form!", "That participle was particu-larly awesome!"];
+const participleIncorrectMessages = ["Not quite do-ing it right. Onto the next!", "Not quite do-ing it right. Onto the next!"];
+const futureCorrectMessages = ["Proof that your future in French is bright.", "You will be racking up points at this rate!", "Proof that your future in French is bright.", "Proof that your future in French is bright.", "You will be racking up points at this rate!"];
+const futureIncorrectMessages = ["At least you'll now get it right in the future.", "At least you'll now get it right in the future.", "At least you'll now get it right in the future."];
+const subjunctiveCorrectMessages = ["May your next answer be this correct!", "Que tu sois brilliant!", "Even if it were hard, you made it look easy.", "Even if it were hard, you made it look easy.", "May your next answer be this correct!"];
+const subjunctiveIncorrectMessages = ['I wish that answer had been right.', "So many hopes in the subjunctive, yet so far from correct!", "So many hopes in the subjunctive, yet so far from correct!", 'I wish that answer had been right.'];
+const conditionalCorrectMessages = ["These points you earned were conditional on you getting the answer.", "If you always answered like that, you would be perfect!", "That was unconditionally awesome!", "These points you earned were conditional on you getting the answer.", "That was unconditionally awesome!", "If you always answered like that, you would be perfect!", "If you always answered like that, you would be perfect!"];
+const conditionalIncorrectMessages = ["Would've, could've, should've... didn't.", "You would've scored points, if that was right.", "Under no condition was that answer correct.", "Would've, could've, should've... didn't.", "You would've scored points, if that was right."]
+const imperativeCorrectMessages = ["It was imperative you got that correct to earn these points!", "You followed the command, and correct you were!", "Imperative? I'm starting to think you're the boss of it!", "It was imperative you got that correct to earn these points!", "Imperative? I'm starting to think you're the boss of it!"]
+const imperativeIncorrectMessages = ["Not quite what the imperative demanded...", " The imperative demanded better!", "Not quite what the imperative demanded...", " The imperative demanded better!"]
+
+const generalCorrectMessages = ["That was parfait! Good travail.", "That was textbook, or should I say cahier?", "Correct! L'Académie Française applaud you.", "Incroyable! That was parfait.", "I tip my chapeau to you!", "Très bien!", "You: 1, French verbs: 0. Next round!"]
+const generalIncorrectMessages = ["That was close. Onto the next one!", "French verbs: 1, You: 0. Next round!", "That answer had a certain... je ne sais quoi... of incorrectness.",  "That answer leaves something to be désiré."]
 
   // track user stats for each tense
   const [present, setPresent] = useState({
@@ -641,6 +662,7 @@ useEffect(() => {
         // clear verb input
         setInputValue("");
         setInputDisabled(false);
+        setAnswerMessage('');
 
         if (inputRef.current) {
             inputRef.current.focus();
@@ -707,46 +729,57 @@ useEffect(() => {
         }else {
             setInputDisabled(true);
 
+            let answerMessages;
+
             if (verbInfo.tense === "Present"){
                 setPresent(prev => ({
                     ...prev,
                     numQuestions: prev.numQuestions + 1
                   }));
+                  // assigns incorrect before being overwritten with correct if answer is correct
+                  answerMessages = [...generalIncorrectMessages, ...presentIncorrectMessages];
             }else if (verbInfo.tense === "Imperfect"){
                 setImperfect(prev => ({
                     ...prev,
                     numQuestions: prev.numQuestions + 1
                   }));
+                  answerMessages = [...generalIncorrectMessages, ...imperfectIncorrectMessages];
             }else if (verbInfo.tense === "Past Participle"){
                 setPast(prev => ({
                     ...prev,
                     numQuestions: prev.numQuestions + 1
                   }));
+                  answerMessages = [...generalIncorrectMessages, ...pastIncorrectMessages];
             }else if (verbInfo.tense === "Future Simple"){
                 setFuture(prev => ({
                     ...prev,
                     numQuestions: prev.numQuestions + 1
                   }));
+                  answerMessages = [...generalIncorrectMessages, ...futureIncorrectMessages];
             }else if (verbInfo.tense === "Conditional"){
                 setConditional(prev => ({
                     ...prev,
                     numQuestions: prev.numQuestions + 1
                   }));
+                  answerMessages = [...generalIncorrectMessages, ...conditionalIncorrectMessages];
             }else if (verbInfo.tense === "Subjunctive"){
                 setSubjunctive(prev => ({
                     ...prev,
                     numQuestions: prev.numQuestions + 1
                   }));
+                  answerMessages = [...generalIncorrectMessages, ...subjunctiveIncorrectMessages];
             }else if (verbInfo.tense === "Present Participle"){
                 setParticiple(prev => ({
                     ...prev,
                     numQuestions: prev.numQuestions + 1
                   }));
+                  answerMessages = [...generalIncorrectMessages, ...participleIncorrectMessages];
             }else  if (verbInfo.tense === "Imperative"){
                 setImperative(prev => ({
                     ...prev,
                     numQuestions: prev.numQuestions + 1
                   }));
+                  answerMessages = [...generalIncorrectMessages, ...imperativeIncorrectMessages];
             }
 
             let answer:string = normaliseInput(inputValue)
@@ -770,43 +803,51 @@ useEffect(() => {
                 if (verbInfo.tense === "Present"){
                     setPresent(prev => ({
                         ...prev,
-                        numCorrect: prev.numCorrect + 1
+                        numCorrect: prev.numCorrect + 1,
                       }));
+                    answerMessages = [...generalCorrectMessages, ...presentCorrectMessages];
                 }else if (verbInfo.tense === "Imperfect"){
                     setImperfect(prev => ({
                         ...prev,
                         numCorrect: prev.numCorrect + 1
                       }));
+                      answerMessages = [...generalCorrectMessages, ...imperfectCorrectMessages];
                 }else if (verbInfo.tense === "Past Participle"){
                     setPast(prev => ({
                         ...prev,
                         numCorrect: prev.numCorrect + 1
                       }));
+                      answerMessages = [...generalCorrectMessages, ...pastCorrectMessages];
                 }else if (verbInfo.tense === "Future Simple"){
                     setFuture(prev => ({
                         ...prev,
                         numCorrect: prev.numCorrect + 1
                       }));
+                      answerMessages = [...generalCorrectMessages, ...futureCorrectMessages];
                 }else if (verbInfo.tense === "Conditional"){
                     setConditional(prev => ({
                         ...prev,
                         numCorrect: prev.numCorrect + 1
                       }));
+                      answerMessages = [...generalCorrectMessages, ...conditionalCorrectMessages];
                 }else if (verbInfo.tense === "Subjunctive"){
                     setSubjunctive(prev => ({
                         ...prev,
                         numCorrect: prev.numCorrect + 1
                       }));
+                      answerMessages = [...generalCorrectMessages, ...subjunctiveCorrectMessages];
                 }else if (verbInfo.tense === "Present Participle"){
                     setParticiple(prev => ({
                         ...prev,
                         numCorrect: prev.numCorrect + 1
                       }));
+                      answerMessages = [...generalCorrectMessages, ...participleCorrectMessages];
                 }else  if (verbInfo.tense === "Imperative"){
                     setImperative(prev => ({
                         ...prev,
                         numCorrect: prev.numCorrect + 1
                       }));
+                      answerMessages = [...generalCorrectMessages, ...imperativeCorrectMessages];
                 }
     
             }else {
@@ -819,6 +860,8 @@ useEffect(() => {
                     percentage: Math.round((prevProgress.correctAnswers) / (prevProgress.questionsAnswered + 1) * 100)
                 }))
             }
+
+            setAnswerMessage(answerMessages![Math.floor(Math.random() * answerMessages!.length)]);
         }
     }
 
@@ -842,6 +885,7 @@ useEffect(() => {
 
     function resetStats(){
         setMenu('home');
+        setAnswerMessage('');
         setProgress({
             points: 0,
             questionsAnswered: 0,
@@ -1235,7 +1279,7 @@ if (fetchClassError) {
                     width: isPortrait ? '40vw' : '20vw',
                     height: isPortrait ? '8vh' : '10vh',
                     position: 'absolute',
-                    top: '76vh',
+                    top: '80vh',
                     left: isPortrait ? '30vw' : '54.5vw'
                   }}
                 >
@@ -1249,7 +1293,7 @@ if (fetchClassError) {
                       width: isPortrait ? '20vw' : '20vw',
                       height: isPortrait ? '8vh' : '10vh',
                       position: 'absolute',
-                      top: '76vh',
+                      top: '80vh',
                       left: isPortrait ? '75vw' : '78vw',
                       background: '#B85353'
                     }}
@@ -1257,9 +1301,12 @@ if (fetchClassError) {
                   >
                     End
                   </button>
+                  
                 ) : (
                   <></>
                 )}
+
+                <p style={{fontSize:isPortrait?'0.9rem':'1rem', position:'absolute', top:'74vh', left:isPortrait?'5vw':'30vw', width:isPortrait?'95vw':'70vw', textAlign:'center'}}>{answerMessage}</p>
       
                 {/* Correct answer message */}
                 <div className={styles.correctPopup} style={{
