@@ -139,24 +139,24 @@ export default function SignUp(){
 
     return(<>   
     <p style={{fontSize:'2.5rem', fontWeight:'500', position:'absolute', left:'0vw', width:'100vw', textAlign:'center', top:'8vh'}}>Sign Up</p>
-    <div style={{background:'#1c1e28', position:'absolute', left:isPortrait?'5vw':'30vw', top:'20vh', width:isPortrait?'90vw':'40vw', height:'50vh', borderRadius:'15px'}}>
+    <div style={{background:'#1c1e28', position:'absolute', left:isPortrait?'5vw':'30vw', top:'17vh', width:isPortrait?'90vw':'40vw', height:'53vh', borderRadius:'15px'}}>
 
-    <p style={{fontSize:isPortrait?'1rem':'1.6rem', position:'absolute', left:isPortrait?'3vw':'2vw', top:'5vh', height:'8vh', alignContent:'center'}}>Username</p>
-    <input value={usernameInput} onChange={e => setUsernameInput(e.target.value)} style={{position:'absolute', left:isPortrait?'28vw':'15vw', top:'5vh', width:isPortrait?'55vw':'20vw', height:'8vh'}}/>
+    <p style={{fontSize:isPortrait?'1rem':'1.6rem', position:'absolute', left:isPortrait?'3vw':'2vw', top:'5vh', height:'11vh', alignContent:'center'}}>Username</p>
+    <input value={usernameInput} onChange={e => setUsernameInput(e.target.value)} style={{position:'absolute', left:isPortrait?'28vw':'15vw', top:'8vh', width:isPortrait?'55vw':'20vw', height:'8vh'}}/>
 
-    <p style={{fontSize:isPortrait?'1rem':'1.6rem', position:'absolute', left:isPortrait?'3vw':'2vw', top:'16vh', height:'8vh', alignContent:'center'}}>Password</p>
-    <input value={passwordOneInput} onChange={e => setPasswordOneInput(e.target.value)}  style={{position:'absolute', left:isPortrait?'28vw':'15vw', top:'16vh', width:isPortrait?'55vw':'20vw', height:'8vh'}}/>
+    <p style={{fontSize:isPortrait?'1rem':'1.6rem', position:'absolute', left:isPortrait?'3vw':'2vw', top:'19vh', height:'8vh', alignContent:'center'}}>Password</p>
+    <input type='password' value={passwordOneInput} onChange={e => setPasswordOneInput(e.target.value)}  style={{position:'absolute', left:isPortrait?'28vw':'15vw', top:'19vh', width:isPortrait?'55vw':'20vw', height:'8vh'}}/>
 
-    <p style={{fontSize:isPortrait?'1rem':'1.6rem', position:'absolute', left:isPortrait?'3vw':'2vw', top:'27vh', width:isPortrait?'20vw':'13vw', height:'8vh', alignContent:'center'}}>Confirm Password</p>
-    <input value={passwordTwoInput} onChange={e => setPasswordTwoInput(e.target.value)}   style={{position:'absolute', left:isPortrait?'28vw':'15vw', top:'27vh', width:isPortrait?'55vw':'20vw', height:'8vh'}}/>
+    <p style={{fontSize:isPortrait?'1rem':'1.6rem', position:'absolute', left:isPortrait?'3vw':'2vw', top:'30vh', width:isPortrait?'20vw':'13vw', height:'8vh', alignContent:'center'}}>Confirm Password</p>
+    <input type='password' value={passwordTwoInput} onChange={e => setPasswordTwoInput(e.target.value)}   style={{position:'absolute', left:isPortrait?'28vw':'15vw', top:'30vh', width:isPortrait?'55vw':'20vw', height:'8vh'}}/>
 
-        <p style={{fontSize:isPortrait?'0.8rem':'1.3rem', position:'absolute', top:'38vh', left:'2vw', width:isPortrait?'20vw':'9vw', height:'6vh', alignContent:'center'}}>Account Type</p>
-        <select id="role" value={role} onChange={handleChange} style={{position:'absolute', left:isPortrait?'24.5vw':'11vw', top:'38vh', width:isPortrait?'24vw':'10vw', height:'6vh'}}>
+        <p style={{fontSize:isPortrait?'0.8rem':'1.3rem', position:'absolute', top:'43vh', left:'2vw', width:isPortrait?'20vw':'9vw', height:'6vh', alignContent:'center'}}>Account Type</p>
+        <select id="role" value={role} onChange={handleChange} style={{position:'absolute', left:isPortrait?'24.5vw':'11vw', top:'43vh', width:isPortrait?'24vw':'10vw', height:'6vh'}}>
             <option value="student">Student</option>
             <option value="teacher">Teacher</option>
             </select>
 
-        <button onClick={() => {signUpButton()}} style={{position:'absolute', left:isPortrait?'50vw':'23vw', top:'38vh', width:isPortrait?'35vw':'13vw', height:'6vh'}}>Confirm</button>
+        <button onClick={() => {signUpButton()}} style={{position:'absolute', left:isPortrait?'50vw':'23vw', top:'43vh', width:isPortrait?'35vw':'13vw', height:'6vh'}}>Confirm</button>
     </div>
 
     <Link href='/log-in' className={styles.Link} style={{fontSize:'2rem', position:'absolute', top:'75vh', left:'0vw', width:'100vw', textAlign:'center'}}>Log In Instead</Link>
