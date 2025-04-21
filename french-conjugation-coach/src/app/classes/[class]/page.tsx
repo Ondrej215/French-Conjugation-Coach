@@ -213,7 +213,7 @@ export default function ClassPage() {
                     {classData.max_points !== null && <p style={{fontSize:isPortrait?'1.1rem':'1.5rem'}}>Maximum of {classData.max_points} points per day.</p>}
                     {classData.min_questions !== null && <p style={{fontSize:isPortrait?'1.1rem':'1.5rem'}}>Minimum of {classData.min_questions} questions per drill.</p>}
                     <br></br>
-                    <p style={{fontSize:isPortrait?'1.1rem':'1.5rem', fontWeight:'300'}}>Only drills that meet these rules will count towards this class's leaderboard and stats.</p>
+                    <p style={{fontSize:isPortrait?'1.1rem':'1.5rem', fontWeight:'300'}}>{"Only drills that meet these rules will count towards this class's leaderboard and stats."}</p>
                 </div>
             </div>
 
