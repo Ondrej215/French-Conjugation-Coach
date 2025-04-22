@@ -3,13 +3,31 @@ import { redirect } from 'next/navigation';
 import { useSession } from '../../../hooks/useSession';
 import { supabase } from '../../../lib/supabaseClient';
 import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 
 export default function Account(){
 
     const { session, loading, role, accountInfo} = useSession();
     const router = useRouter();
+    const [isPortrait, setIsPortrait] = useState<boolean | null>(null);
+
+    useEffect(() => {
+      const handleResize = () => {
+        setIsPortrait(window.innerHeight > window.innerWidth);
+      };
+  
+      if (typeof window !== 'undefined') {
+        handleResize();
+        window.addEventListener('resize', handleResize);
+      }
+  
+      return () => {
+        if (typeof window !== 'undefined') {
+          window.removeEventListener('resize', handleResize);
+        }
+      };
+    }, []);
 
     useEffect(() => {
       if (!loading && !session) {
@@ -56,20 +74,21 @@ export default function Account(){
     }
 
     return(<>
-    <p style={{position:'absolute', width:'100vw', top:'10vh', textAlign:'center', fontSize:'3.5rem', fontWeight:'500'}}>{username}</p>
-    <p style={{position:'absolute', width:'100vw', top:'22vh', textAlign:'center', fontSize:'1.5rem', fontWeight:'300'}}>{account_role}</p>
-    
-    <div style={{backgroundColor:'#0C0C13', position:'absolute', width:'100vw', height:'70vh', top:'30vh'}}>
-      {role === 'student'?
-      <><p style={{position:'absolute', left:'0vw', top:'5vh', width:'50vw', textAlign:'center', fontSize:'1.8rem', fontWeight:'500'}}>All Time Stats</p>
-      <p style={{position:'absolute', left:'0vw', top:'15vh', width:'50vw', textAlign:'center', fontSize:'1.4rem', fontWeight:'300'}}>{totalScore} Total Points</p>
-      <p style={{position:'absolute', left:'0vw', top:'23vh', width:'50vw', textAlign:'center', fontSize:'1.4rem', fontWeight:'300'}}>{streak} Day Streak</p>
-      <p style={{position:'absolute', left:'0vw', top:'31vh', width:'50vw', textAlign:'center', fontSize:'1.4rem', fontWeight:'300'}}> 100% All time accuracy</p>
+    <p style={{position:'absolute', width:'100vw', top:'10vh', textAlign:'center', fontSize: isPortrait ? '7vw' : '3.5vw', fontWeight:'500'}}>{username}</p>
+<p style={{position:'absolute', width:'100vw', top:'22vh', textAlign:'center', fontSize: isPortrait ? '3vw' : '1.5vw', fontWeight:'300'}}>{account_role}</p>
 
-      <p style={{position:'absolute', left:'50vw', top:'5vh', width:'50vw', textAlign:'center', fontSize:'1.8rem', fontWeight:'500'}}>Tense Accuracies</p>
-      </>:<></>}
+<div style={{backgroundColor:'#0C0C13', position:'absolute', width:'100vw', height:'70vh', top:'30vh'}}>
+  {role === 'student' ?
+  <>
+    <p style={{position:'absolute', left:'0vw', top:'5vh', width:'50vw', textAlign:'center', fontSize: isPortrait ? '3.6vw' : '1.8vw', fontWeight:'500'}}>All Time Stats</p>
+    <p style={{position:'absolute', left:'0vw', top:'15vh', width:'50vw', textAlign:'center', fontSize: isPortrait ? '2.8vw' : '1.4vw', fontWeight:'300'}}>{totalScore} Total Points</p>
+    <p style={{position:'absolute', left:'0vw', top:'23vh', width:'50vw', textAlign:'center', fontSize: isPortrait ? '2.8vw' : '1.4vw', fontWeight:'300'}}>{streak} Day Streak</p>
+    <p style={{position:'absolute', left:'0vw', top:'31vh', width:'50vw', textAlign:'center', fontSize: isPortrait ? '2.8vw' : '1.4vw', fontWeight:'300'}}>100% All time accuracy</p>
 
-      <button onClick={() => {handleLogout()}}style={{position:'absolute', left:'38vw', top:'46vh', width:'24vw', height:'8vh'}}>Log Out</button>
-    </div>
+    <p style={{position:'absolute', left:'50vw', top:'5vh', width:'50vw', textAlign:'center', fontSize: isPortrait ? '3.6vw' : '1.8vw', fontWeight:'500'}}>Tense Accuracies</p>
+  </> : <></>}
+
+  <button onClick={() => {handleLogout()}} style={{position:'absolute', left:'38vw', top:'46vh', width:'24vw', height:'8vh', fontSize: isPortrait ? '3vw' : '1.5vw'}}>Log Out</button>
+</div>
     </>);
 }

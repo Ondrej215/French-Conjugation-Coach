@@ -14,7 +14,7 @@ const ProgressBar: React.FC<ProgressBarProps> = ({ percentage }) => {
       <div
         style={{
           position: "fixed", // Fixed position to stick to the top
-          top: "10vh", // Adjust space from top (can be adjusted)
+          top: "11vh", // Adjust space from top (can be adjusted)
           left: "50%", // Center horizontally
           transform: "translateX(-50%)", // Adjust the element to be exactly centered
           width: "70vw", // Set width as per your need

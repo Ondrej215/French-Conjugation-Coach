@@ -124,12 +124,12 @@ export default function JoinClass(){
 
     return(<>
     <div style={{position:'absolute', left:isPortrait?'10vw':'20vw', top:'15vh', height:'70vh', width:isPortrait?'80vw':'60vw', backgroundColor:'#1c1e28', borderRadius:'15px'}}></div>
-    <p style={{textAlign:'center', fontSize:'1.8rem', position:'absolute', top:'20vh', width:'100vw'}}>Enter Class Code</p>
-    <input value={classcodeInput} onChange={e => {setClasscodeInput(e.target.value)}} type='text' style={{position:'absolute', left:isPortrait?'20vw':'35vw', width:isPortrait?'60vw':'30vw', top:'35vh', height:'8vh'}}></input>
+    <p style={{textAlign:'center', fontSize:isPortrait?'3.6vw':'1.8vw', position:'absolute', top:'20vh', width:'100vw'}}>Enter Class Code</p>
+    <input value={classcodeInput} onChange={e => {setClasscodeInput(e.target.value)}} type='text' style={{position:'absolute', left:isPortrait?'20vw':'35vw', width:isPortrait?'60vw':'30vw', top:'35vh', height:'8vh', fontSize:isPortrait?'3.6vw':'1.8vw'}}></input>
     
-    <p style={{textAlign:'center', fontSize:'1.2rem', position:'absolute', top:'45vh', width:'70vw', left:'15vw'}}>Your class code should be provided to you by your teacher.<br/>If you have not receved a code, request it from your teacher.<br/> It should consist of 6 letters.</p>
+    <p style={{textAlign:'center', fontSize:isPortrait?'2.4vw':'1.2vw', position:'absolute', top:'45vh', width:'70vw', left:'15vw'}}>Your class code should be provided to you by your teacher.<br/>If you have not receved a code, request it from your teacher.<br/> It should consist of 6 letters.</p>
 
-    <button onClick={() => confirmButton()} style={{position:'absolute', left:isPortrait?'30vw':'40vw', width:isPortrait?'40vw':'20vw', top:'70vh', height:'8vh'}}>Confirm</button>
+    <button onClick={() => confirmButton()} style={{position:'absolute', left:isPortrait?'30vw':'40vw', width:isPortrait?'40vw':'20vw', top:'70vh', height:'8vh', fontSize:isPortrait?'3.6vw':'1.8vw'}}>Confirm</button>
     
     {errorMessage && (
   <p style={{
@@ -142,7 +142,7 @@ export default function JoinClass(){
     backgroundColor: '#ff4d4f',
     padding: '0.8rem',
     borderRadius: '8px',
-    fontSize: '1rem'
+    fontSize:isPortrait?'2vw': '1vw'
   }}>
     {errorMessage}
   </p>

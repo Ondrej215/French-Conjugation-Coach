@@ -98,12 +98,12 @@ export default function CreateClass(){
 
     return(<>
     <div style={{position:'absolute', left:isPortrait?'10vw':'20vw', top:'15vh', height:'70vh', width:isPortrait?'80vw':'60vw', backgroundColor:'#1c1e28', borderRadius:'15px'}}></div>
-    <p style={{textAlign:'center', fontSize:'1.8rem', position:'absolute', top:'20vh', width:'100vw'}}>Pick a Class Name</p>
-    <input value={classnameInput} onChange={e => {setClassnameInput(e.target.value)}} type='text' style={{position:'absolute', left:isPortrait?'20vw':'35vw', width:isPortrait?'60vw':'30vw', top:'35vh', height:'8vh'}}></input>
+    <p style={{textAlign:'center', fontSize:isPortrait?'3.6vw':'1.8vw', position:'absolute', top:'20vh', width:'100vw'}}>Pick a Class Name</p>
+    <input value={classnameInput} onChange={e => {setClassnameInput(e.target.value)}} type='text' style={{position:'absolute', left:isPortrait?'20vw':'35vw', width:isPortrait?'60vw':'30vw', top:'35vh', height:'8vh', fontSize:isPortrait?'3.6vw':'1.8vw'}}></input>
 
-    <p style={{textAlign:'center', fontSize:'1.2rem', position:'absolute', top:'48vh', width:'70vw', left:'15vw'}}>After creating your class, a unique class code will appear in your class dashboard. <br/> Share this code with your students so they can join.</p>
+    <p style={{textAlign:'center', fontSize:isPortrait?'2.4vw':'1.2vw', position:'absolute', top:'48vh', width:'70vw', left:'15vw'}}>After creating your class, a unique class code will appear in your class dashboard. <br/> Share this code with your students so they can join.</p>
     
-    <button onClick={() => confirmButton()} style={{position:'absolute', left:isPortrait?'30vw':'40vw', width:isPortrait?'40vw':'20vw', top:'70vh', height:'8vh'}}>Confirm</button>
+    <button onClick={() => confirmButton()} style={{position:'absolute', left:isPortrait?'30vw':'40vw', width:isPortrait?'40vw':'20vw', top:'70vh', height:'8vh', fontSize:isPortrait?'3.6vw':'1.8vw'}}>Confirm</button>
     
     {errorMessage && (
   <p style={{
@@ -116,7 +116,7 @@ export default function CreateClass(){
     backgroundColor: '#ff4d4f',
     padding: '0.8rem',
     borderRadius: '8px',
-    fontSize: '1rem'
+    fontSize:isPortrait?'2vw': '1vw'
   }}>
     {errorMessage}
   </p>
