@@ -1118,13 +1118,13 @@ if (fetchClassError) {
           
       {menu === 'home' && (
         <div className={styles.background}>
-          <p>Verb Conjugation Drill</p>
+          <p style={{fontSize:isPortrait?'5vw':'2.5vw'}}>Verb Conjugation Drill</p>
       
-          <br />
+          {!isPortrait && <br />}
       
           <div className="flex flex-col sm:flex-row sm:justify-center sm:items-center gap-4 w-full text-white text-[isPortrait ? '2.4vw' : '1.2vw']">
             <div className="flex justify-center">
-              <p>Total Questions</p>
+              <p style={{fontSize:isPortrait?'3.6vw':'1.8vw'}}>Total Questions</p>
             </div>
       
             <div className="flex justify-center">
@@ -1143,7 +1143,7 @@ if (fetchClassError) {
             </div>
       
             <div className="flex justify-center">
-              <span>
+              <span style={{fontSize:isPortrait?'3.6vw':'1.8vw'}}>
                 {unlimitedPractice
                   ? "Maximum of unlimited points"
                   : `Maximum of ${(selectedNum - 10) * 5 + 100} points`}
@@ -1153,20 +1153,20 @@ if (fetchClassError) {
       
           <br />
       
-          <label className="flex items-center justify-center text-white text-[isPortrait ? '2.8vw' : '1.4vw'] mr-4 cursor-pointer">
+          <label style={{fontSize:isPortrait?'3.6vw':'1.8vw'}} className="flex items-center justify-center text-white text-[isPortrait ? '2.8vw' : '1.4vw'] mr-4 cursor-pointer">
             <input
               type="checkbox"
               checked={unlimitedPractice}
               onChange={(e) => setUnlimitedPractice(e.target.checked)}
               className="peer hidden"
             />
-            <span className="w-5 h-5 mr-2 border-2 border-white rounded-sm peer-checked:bg-blue-500 peer-checked:border-blue-500 transition-colors"></span>
+            <span style={{fontSize:isPortrait?'3.6vw':'1.8vw'}} className="w-5 h-5 mr-2 border-2 border-white rounded-sm peer-checked:bg-blue-500 peer-checked:border-blue-500 transition-colors"></span>
             Unlimited Practice
           </label>
       
           <br />
       
-          <label className="flex items-center justify-center text-white text-[isPortrait ? '2.8vw' : '1.4vw'] mr-4 cursor-pointer">
+          <label style={{fontSize:isPortrait?'3.6vw':'1.8vw'}} className="flex items-center justify-center text-white text-[isPortrait ? '2.8vw' : '1.4vw'] mr-4 cursor-pointer">
             <input
               type="checkbox"
               checked={strictAccents}
@@ -1179,7 +1179,7 @@ if (fetchClassError) {
       
           <br />
       
-          <label className="flex items-center justify-center text-white text-[isPortrait ? '2.8vw' : '1.4vw'] mr-4 cursor-pointer">
+          <label style={{fontSize:isPortrait?'3.6vw':'1.8vw'}} className="flex items-center justify-center text-white text-[isPortrait ? '2.8vw' : '1.4vw'] mr-4 cursor-pointer">
             <input
               type="checkbox"
               checked={leaderboardMode}
@@ -1203,6 +1203,7 @@ if (fetchClassError) {
               left: isPortrait ? '32.5vw' : '42.5vw',
               width: isPortrait ? '35vw' : '15vw',
               height: isPortrait ? '7vh' : '9vh',
+              fontSize:isPortrait?'3.6vw':'1.8vw'
             }}
           >
             Start
@@ -1228,20 +1229,20 @@ if (fetchClassError) {
               }}
             >
               {!isPortrait && <div style={{ height: "5vh" }} />}
-              <p style={{ fontSize: isPortrait ? '3.6vw' : '2.4vw', fontWeight: '500' }}>
+              <p style={{ fontSize: isPortrait ? '4.8vw' : '2.4vw', fontWeight: '500' }}>
                 {capitalise(verbInfo.infinitive)}
               </p>
               <p style={{ fontSize: isPortrait ? '2.4vw' : '1.2vw', fontWeight: '50' }}>{verbInfo.translation}</p>
               <br />
               <p style={{
-                fontSize: isPortrait ? '2.8vw' : '1.9vw',
+                fontSize: isPortrait ? '3.8vw' : '1.9vw',
                 backgroundColor: '#191A27',
                 borderRadius: '15px'
               }}>
                 {verbInfo.tense}
               </p>
               {!isPortrait && <br />}
-              <p style={{ fontSize: isPortrait ? '3.6vw' : '2.4vw', fontWeight: '400' }}>
+              <p style={{ fontSize: isPortrait ? '4.8vw' : '2.4vw', fontWeight: '400' }}>
                 {checkButton ? '' : (verbInfo.tense !== "Imperative" ? capitalise(verbInfo.pronoun) : '') + ' ' + capitalise(verbInfo.answer)}
               </p>
             </div>
@@ -1263,7 +1264,8 @@ if (fetchClassError) {
                 width: isPortrait ? "65vw" : "25vw",
                 height: isPortrait ? '8vh' : "12vh",
                 left: isPortrait ? "20vw" : "52vw",
-                top: isPortrait ? "60vh" : "44vh"
+                top: isPortrait ? "60vh" : "44vh",
+                fontSize: isPortrait ? '3.2vw' : '1.6vw'
               }}
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
@@ -1280,7 +1282,8 @@ if (fetchClassError) {
                 height: isPortrait ? '8vh' : '10vh',
                 position: 'absolute',
                 top: '80vh',
-                left: isPortrait ? '30vw' : '54.5vw'
+                left: isPortrait ? '30vw' : '54.5vw',
+                fontSize: isPortrait ? '3.2vw' : '1.6vw'
               }}
             >
               {checkButton ? 'Check' : 'Next'}
@@ -1295,7 +1298,8 @@ if (fetchClassError) {
                   position: 'absolute',
                   top: '80vh',
                   left: isPortrait ? '75vw' : '78vw',
-                  background: '#B85353'
+                  background: '#B85353',
+                  fontSize: isPortrait ? '3.2vw' : '1.6vw'
                 }}
                 className={styles.endButton}
               >
@@ -1359,7 +1363,8 @@ if (fetchClassError) {
                   width: isPortrait ? '10vw' : '4vw',
                   borderRadius: '180px',
                   padding: '0rem 0rem',
-                  backgroundColor: '#1852B1'
+                  backgroundColor: '#1852B1',
+                  fontSize: isPortrait ? '2vw' : '1vw'
                 }}
               >
                 {accent}
@@ -1373,35 +1378,35 @@ if (fetchClassError) {
         <>
           <p style={{fontSize: isPortrait ? '6vw' : '3vw', position:'absolute', top:'7vh'}}>Drill Completed!</p>
           <div style={{backgroundColor:'#1c1e28', borderRadius:'15px', position:'absolute', left:isPortrait?'10vw':'5vw', top:isPortrait?'18vh':'20vh', width:isPortrait?'80vw':'42vw', height:isPortrait?'25vh':'48vh', textAlign:'center', boxShadow: '5px 5px 10px rgba(0, 0, 0, 0.5)'}}>
-            <p className={styles.statNumber} style={{fontSize: isPortrait ? '6vw' : '5vw', fontWeight:'500', position:'absolute', top:isPortrait?'4vh':'10vh', left:isPortrait?'6vw':'3vw'}}>{progress.percentage}%</p>
-            <p style={{fontSize: isPortrait ? '2.4vw' : '2vw', fontWeight:'300', position:'absolute', top:isPortrait?'15vh':'28vh', left:isPortrait?'7.5vw':'4vw'}}>Accuracy</p>
+            <p className={styles.statNumber} style={{fontSize: isPortrait ? '10vw' : '5vw', fontWeight:'500', position:'absolute', top:isPortrait?'4vh':'10vh', left:isPortrait?'6vw':'3vw'}}>{progress.percentage}%</p>
+            <p style={{fontSize: isPortrait ? '4vw' : '2vw', fontWeight:'300', position:'absolute', top:isPortrait?'15vh':'28vh', left:isPortrait?'7.5vw':'4vw'}}>Accuracy</p>
       
-            <p className={styles.statNumber} style={{fontSize: isPortrait ? '6vw' : '5vw', fontWeight:'500', position:'absolute', top:isPortrait?'4vh':'10vh', left:isPortrait?'35vw':'18vw'}}>{progress.points}</p>
-            <p style={{fontSize: isPortrait ? '2.4vw' : '2vw', fontWeight:'300', position:'absolute', top:isPortrait?'15vh':'28vh', left:isPortrait?'37.5vw':'19.2vw'}}>Points</p>
+            <p className={styles.statNumber} style={{fontSize: isPortrait ? '10vw' : '5vw', fontWeight:'500', position:'absolute', top:isPortrait?'4vh':'10vh', left:isPortrait?'35vw':'18vw'}}>{progress.points}</p>
+            <p style={{fontSize: isPortrait ? '4vw' : '2vw', fontWeight:'300', position:'absolute', top:isPortrait?'15vh':'28vh', left:isPortrait?'37.5vw':'19.2vw'}}>Points</p>
       
-            <p className={styles.statNumber} style={{fontSize: isPortrait ? '6vw' : '5vw', fontWeight:'500', position:'absolute', top:isPortrait?'4vh':'10vh', left:isPortrait?'64vw':'33vw'}}>{progress.questionsAnswered}</p>
-            <p style={{fontSize: isPortrait ? '2.4vw' : '2vw', fontWeight:'300', position:'absolute', top:isPortrait?'15vh':'28vh', left:isPortrait?'58vw':'29vw'}}>Verbs Practiced</p>
+            <p className={styles.statNumber} style={{fontSize: isPortrait ? '10vw' : '5vw', fontWeight:'500', position:'absolute', top:isPortrait?'4vh':'10vh', left:isPortrait?'64vw':'33vw'}}>{progress.questionsAnswered}</p>
+            <p style={{fontSize: isPortrait ? '4vw' : '2vw', fontWeight:'300', position:'absolute', top:isPortrait?'15vh':'28vh', left:isPortrait?'58vw':'29vw'}}>Verbs Practiced</p>
           </div>
       
           <div style={{backgroundColor:'#1c1e28', borderRadius:'15px', position:'absolute', left:isPortrait?'10vw':'53vw', top:isPortrait?'46vh':'20vh', width:isPortrait?'80vw':'42vw', height:isPortrait?'25vh':'48vh', textAlign:'center', boxShadow: '5px 5px 10px rgba(0, 0, 0, 0.5)'}}>
-            <p style={{fontSize: isPortrait ? '1.6vw' : '1.4vw', fontWeight:'300'}}>Most Practiced Tense</p>
+            <p style={{fontSize: isPortrait ? '1.8vw' : '1.4vw', fontWeight:'300'}}>Most Practiced Tense</p>
       
-            <p className={styles.statNumber} style={{fontSize: isPortrait ? '2vw' : '2.6vw', fontWeight:'500'}}>{capitalise(mostQuestions.name)} ({mostQuestions.value} Qs)</p>
-      
-            <br></br>
-      
-            <p style={{fontSize: isPortrait ? '1.6vw' : '1.4vw', fontWeight:'300'}}>Most Accurate Tense</p>
-      
-            <p className={styles.statNumber} style={{fontSize: isPortrait ? '2vw' : '2.6vw', fontWeight:'500'}}>{capitalise(mostAccurate.name)} ({mostAccurate.value}%)</p>
+            <p className={styles.statNumber} style={{fontSize: isPortrait ? '3vw' : '2.6vw', fontWeight:'500'}}>{capitalise(mostQuestions.name)} ({mostQuestions.value} Qs)</p>
       
             <br></br>
       
-            <p style={{fontSize: isPortrait ? '1.6vw' : '1.4vw', fontWeight:'300'}}>Least Accurate Tense</p>
+            <p style={{fontSize: isPortrait ? '1.8w' : '1.4vw', fontWeight:'300'}}>Most Accurate Tense</p>
       
-            <p className={styles.statNumber} style={{fontSize: isPortrait ? '2vw' : '2.6vw', fontWeight:'500'}}>{capitalise(leastAccurate.name)} ({leastAccurate.value}%)</p>
+            <p className={styles.statNumber} style={{fontSize: isPortrait ? '3vw' : '2.6vw', fontWeight:'500'}}>{capitalise(mostAccurate.name)} ({mostAccurate.value}%)</p>
+      
+            <br></br>
+      
+            <p style={{fontSize: isPortrait ? '1.8vw' : '1.4vw', fontWeight:'300'}}>Least Accurate Tense</p>
+      
+            <p className={styles.statNumber} style={{fontSize: isPortrait ? '3vw' : '2.6vw', fontWeight:'500'}}>{capitalise(leastAccurate.name)} ({leastAccurate.value}%)</p>
           </div>
       
-          <button style={{position:'absolute', top:'75vh', left:isPortrait?'25vw':'40vw', height:'8vh', width:isPortrait?'50vw':'20vw'}} onClick={() => resetStats()}>Start New Drill</button>
+          <button style={{position:'absolute', top:'75vh', left:isPortrait?'25vw':'40vw', height:'8vh', width:isPortrait?'50vw':'20vw', fontSize: isPortrait ? '2.8vw' : '1.4vw'}} onClick={() => resetStats()}>Start New Drill</button>
         </>
       )}
       
