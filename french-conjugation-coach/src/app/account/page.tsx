@@ -82,10 +82,11 @@ export default function Account(){
   <>
     <p style={{position:'absolute', left:'0vw', top:'5vh', width:'50vw', textAlign:'center', fontSize: isPortrait ? '3.6vw' : '1.8vw', fontWeight:'500'}}>All Time Stats</p>
     <p style={{position:'absolute', left:'0vw', top:'15vh', width:'50vw', textAlign:'center', fontSize: isPortrait ? '2.8vw' : '1.4vw', fontWeight:'300'}}>{totalScore} Total Points</p>
-    <p style={{position:'absolute', left:'0vw', top:'23vh', width:'50vw', textAlign:'center', fontSize: isPortrait ? '2.8vw' : '1.4vw', fontWeight:'300'}}>{streak} Day Streak</p>
+    {/*<p style={{position:'absolute', left:'0vw', top:'23vh', width:'50vw', textAlign:'center', fontSize: isPortrait ? '2.8vw' : '1.4vw', fontWeight:'300'}}>{streak} Day Streak</p>*/}
     <p style={{position:'absolute', left:'0vw', top:'31vh', width:'50vw', textAlign:'center', fontSize: isPortrait ? '2.8vw' : '1.4vw', fontWeight:'300'}}>100% All time accuracy</p>
 
     <p style={{position:'absolute', left:'50vw', top:'5vh', width:'50vw', textAlign:'center', fontSize: isPortrait ? '3.6vw' : '1.8vw', fontWeight:'500'}}>Tense Accuracies</p>
+    <p style={{position:'absolute', left:'50vw', top:'15vh', width:'50vw', textAlign:'center', fontSize: isPortrait ? '3.6vw' : '1.8vw', fontWeight:'300'}}>*To Be Completed</p>
   </> : <></>}
 
   <button onClick={() => {handleLogout()}} style={{position:'absolute', left:'38vw', top:'46vh', width:'24vw', height:'8vh', fontSize: isPortrait ? '3vw' : '1.5vw'}}>Log Out</button>

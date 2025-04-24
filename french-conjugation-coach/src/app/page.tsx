@@ -9,7 +9,7 @@ import { useSession } from '../../hooks/useSession';
 export default function Home() {
   const [selectedNum, setSelectedNum] = useState<number>(10);
   const question_num_choices = [10, 20, 30, 40, 50];
-  const [unlimitedPractice, setUnlimitedPractice] = useState<boolean>(false);
+  const [unlimitedPractice, setUnlimitedPractice] = useState<boolean>(true);
   const [strictAccents, setStrictAccents] = useState<boolean>(true);
   const [leaderboardMode, setLeaderboardMode] = useState<boolean>(true);
   const [menu, setMenu] = useState<string>('home');
@@ -1143,7 +1143,7 @@ if (fetchClassError) {
             </div>
       
             <div className="flex justify-center">
-              <span style={{fontSize:isPortrait?'3.6vw':'1.8vw'}}>
+              <span style={{fontSize:isPortrait?'3.8vw':'1.8vw'}}>
                 {unlimitedPractice
                   ? "Maximum of unlimited points"
                   : `Maximum of ${(selectedNum - 10) * 5 + 100} points`}
@@ -1153,20 +1153,20 @@ if (fetchClassError) {
       
           <br />
       
-          <label style={{fontSize:isPortrait?'3.6vw':'1.8vw'}} className="flex items-center justify-center text-white text-[isPortrait ? '2.8vw' : '1.4vw'] mr-4 cursor-pointer">
+          <label style={{fontSize:isPortrait?'3.8vw':'1.8vw'}} className="flex items-center justify-center text-white text-[isPortrait ? '2.8vw' : '1.4vw'] mr-4 cursor-pointer">
             <input
               type="checkbox"
               checked={unlimitedPractice}
               onChange={(e) => setUnlimitedPractice(e.target.checked)}
               className="peer hidden"
             />
-            <span style={{fontSize:isPortrait?'3.6vw':'1.8vw'}} className="w-5 h-5 mr-2 border-2 border-white rounded-sm peer-checked:bg-blue-500 peer-checked:border-blue-500 transition-colors"></span>
+            <span style={{fontSize:isPortrait?'3.8vw':'1.8vw'}} className="w-5 h-5 mr-2 border-2 border-white rounded-sm peer-checked:bg-blue-500 peer-checked:border-blue-500 transition-colors"></span>
             Unlimited Practice
           </label>
       
           <br />
       
-          <label style={{fontSize:isPortrait?'3.6vw':'1.8vw'}} className="flex items-center justify-center text-white text-[isPortrait ? '2.8vw' : '1.4vw'] mr-4 cursor-pointer">
+          <label style={{fontSize:isPortrait?'3.8vw':'1.8vw'}} className="flex items-center justify-center text-white text-[isPortrait ? '2.8vw' : '1.4vw'] mr-4 cursor-pointer">
             <input
               type="checkbox"
               checked={strictAccents}
@@ -1179,7 +1179,7 @@ if (fetchClassError) {
       
           <br />
       
-          <label style={{fontSize:isPortrait?'3.6vw':'1.8vw'}} className="flex items-center justify-center text-white text-[isPortrait ? '2.8vw' : '1.4vw'] mr-4 cursor-pointer">
+          <label style={{fontSize:isPortrait?'3.8vw':'1.8vw'}} className="flex items-center justify-center text-white text-[isPortrait ? '2.8vw' : '1.4vw'] mr-4 cursor-pointer">
             <input
               type="checkbox"
               checked={leaderboardMode}
@@ -1203,7 +1203,7 @@ if (fetchClassError) {
               left: isPortrait ? '32.5vw' : '42.5vw',
               width: isPortrait ? '35vw' : '15vw',
               height: isPortrait ? '7vh' : '9vh',
-              fontSize:isPortrait?'3.6vw':'1.8vw'
+              fontSize:isPortrait?'3.8vw':'1.8vw'
             }}
           >
             Start
@@ -1395,7 +1395,7 @@ if (fetchClassError) {
       
             <br></br>
       
-            <p style={{fontSize: isPortrait ? '1.8w' : '1.4vw', fontWeight:'300'}}>Most Accurate Tense</p>
+            <p style={{fontSize: isPortrait ? '1.8vw' : '1.4vw', fontWeight:'300'}}>Most Accurate Tense</p>
       
             <p className={styles.statNumber} style={{fontSize: isPortrait ? '3vw' : '2.6vw', fontWeight:'500'}}>{capitalise(mostAccurate.name)} ({mostAccurate.value}%)</p>
       

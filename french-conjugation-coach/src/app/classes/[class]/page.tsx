@@ -190,27 +190,29 @@ export default function ClassPage() {
     <p style={{ fontSize: isPortrait ? '3.4vw' : '1.7vw', textAlign: 'center', fontWeight: '300', marginTop: '2vh' }}>
         Teacher - {teacherName}
     </p>
-    {classMenu === "leaderboard" && <div style={{ backgroundColor: '#0C0C13', width: '100%', minHeight: '100vh', borderRadius: '15px', marginTop:'5vh'}}>
-        {role==='teacher' && (<>
-            <button style={{marginTop:'5vh', marginLeft:isPortrait?'25vw':'40vw', width:isPortrait?'50vw':'20vw', height:'6vh'}}>Class Settings</button>
-            <div style={{marginLeft:'25vw', width:'50vw', height:'10vh'}}>
-                <button style={{marginTop:'5vh', marginLeft:isPortrait?'0vw':'15vw', width:isPortrait?'50vw':'20vw', height:'6vh'}} onClick={() => {setCodeVisible(!codeVisible)}}>{codeVisible?'Hide Join Code':'Show Join Code'}</button>
-                {codeVisible && (<p style={{marginTop:'2vh', width:'50vw', fontSize:isPortrait?'3vw':'1.5vw', fontWeight:'500', textAlign:'center'}}>{classId}</p>)}
+    {classMenu === "leaderboard" && <div style={{ backgroundColor: '#0C0C13', width: '100%', minHeight: '100vh', borderRadius: '15px', marginTop:'5vh', justifyItems:'center'}}>
+        {role==='teacher' && (<div style={{justifyItems:'center'}}>
+            <button style={{marginTop:'5vh', width:isPortrait?'50vw':'20vw', height:'6vh', fontSize:isPortrait?'3.2vw':'1.6vw'}}>Class Settings</button>
+            <div style={{width:'50vw', height:'10vh', alignItems:'center', display:'flex', flexDirection:'column'}}>
+                <button style={{marginTop:'5vh', width:isPortrait?'50vw':'20vw', height:'6vh', fontSize:isPortrait?'3.2vw':'1.6vw'}} onClick={() => {setCodeVisible(!codeVisible)}}>{codeVisible?'Hide Join Code':'Show Join Code'}</button>
+                {codeVisible && (<p style={{marginTop:'2vh', width:'50vw', fontSize:isPortrait?'3.2vw':'1.6vw', fontWeight:'500', textAlign:'center'}}>{classId}</p>)}
             </div>
-        </>)}
+        </div>)}
 
         <div style={{display:isPortrait?'block':'flex', width:'100vw', justifyContent:'center', marginTop:'10vh', justifyItems:'center'}}>
-            <div style={{backgroundColor:'#1c1e28', width:isPortrait?'85vw':'40vw', height:isPortrait?'30vh':'45vh', marginTop:'4vh', borderRadius:'15px', boxShadow:'10px 10px 10px rgba(0, 0, 0, 0.5)'}}>
-
+            <div style={{backgroundColor:'#2b2c3c', width:isPortrait?'85vw':'40vw', height:isPortrait?'30vh':'45vh', marginTop:'4vh', borderRadius:'15px', boxShadow:'10px 10px 10px rgba(0, 0, 0, 0.5)', textAlign:'center'}}>
+                <p style={{fontSize:isPortrait?'3.6vw':'1.8vw', marginTop:'5vh'}}>{students.reduce((sum, student) => sum + (student.score || 0), 0)} Total Class Points</p>
+                <p style={{fontSize:isPortrait?'3.6vw':'1.8vw', marginTop:'5vh'}}>Total Class Accuracy</p>
+                <p  style={{fontSize:isPortrait?'3.6vw':'1.8vw', marginTop:'5vh'}}>You have earned ... points today in this class</p>
             </div>
-            <div style={{backgroundColor:'#1c1e28', width:isPortrait?'85vw':'40vw', height:isPortrait?'30vh':'45vh', marginTop:'4vh', marginLeft:isPortrait?'0vw':'5vw', borderRadius:'15px', boxShadow:'10px 10px 10px rgba(0, 0, 0, 0.5)', textAlign:'center'}}>
+            <div style={{backgroundColor:'#2b2c3c', width:isPortrait?'85vw':'40vw', height:isPortrait?'30vh':'45vh', marginTop:'4vh', marginLeft:isPortrait?'0vw':'5vw', borderRadius:'15px', boxShadow:'10px 10px 10px rgba(0, 0, 0, 0.5)', textAlign:'center'}}>
                 <p style={{fontWeight:'500', fontSize:isPortrait?'4vw':'2vw'}}>Class Rules</p>
                 {!isPortrait && <br></br>}
-                {classData.accents_required === 'true' && <p style={{fontSize:isPortrait?'2.2vw':'1.5vw'}}>Strict accents must be turned on.</p>}
-                {classData.max_points !== null && <p style={{fontSize:isPortrait?'2.2vw':'1.5vw'}}>Maximum of {classData.max_points} points per day.</p>}
-                {classData.min_questions !== null && <p style={{fontSize:isPortrait?'2.2vw':'1.5vw'}}>Minimum of {classData.min_questions} questions per drill.</p>}
+                {classData.accents_required === 'true' && <p style={{fontSize:isPortrait?'3vw':'1.5vw'}}>Strict accents must be turned on.</p>}
+                {classData.max_points !== null && <p style={{fontSize:isPortrait?'3vw':'1.5vw'}}>Maximum of {classData.max_points} points per day.</p>}
+                {classData.min_questions !== null && <p style={{fontSize:isPortrait?'3vw':'1.5vw'}}>Minimum of {classData.min_questions} questions per drill.</p>}
                 <br></br>
-                <p style={{fontSize:isPortrait?'2.2vw':'1.5vw', fontWeight:'300'}}>{"Only drills that meet these rules will count towards this class's leaderboard and stats."}</p>
+                <p style={{fontSize:isPortrait?'3vw':'1.5vw', fontWeight:'300'}}>{"Only drills that meet these rules will count towards this class's leaderboard and stats."}</p>
             </div>
         </div>
 
@@ -264,6 +266,19 @@ export default function ClassPage() {
                 );
             })}
         </div>
+
+        <div style={{display:isPortrait?'block':'flex', width:'100vw', justifyContent:'center', marginTop:'10vh', justifyItems:'center'}}>
+            <div style={{backgroundColor:'#2b2c3c', width:isPortrait?'85vw':'40vw', height:isPortrait?'30vh':'50vh', marginTop:'4vh', borderRadius:'15px', boxShadow:'10px 10px 10px rgba(0, 0, 0, 0.5)', textAlign:'center'}}>
+                <p style={{fontSize:isPortrait?'4vw':'2vw'}}>Most Leaderboard Wins</p>
+            </div>
+
+            <div style={{backgroundColor:'#2b2c3c', width:isPortrait?'85vw':'40vw', height:isPortrait?'60vh':'50vh', marginTop:'4vh', borderRadius:'15px', boxShadow:'10px 10px 10px rgba(0, 0, 0, 0.5)', textAlign:'center', marginLeft:isPortrait?'0vw':'5vw'}}>
+                <p style={{fontSize:isPortrait?'4vw':'2vw'}}>Class Tense Overview</p>
+            </div>
+        </div>
+
+        <button className={styles.endButton} style={{width:isPortrait?'50vw':'20vw', backgroundColor:'red', height:'7vh', marginTop:'5vh', marginBottom:'15vh', fontSize:isPortrait?'3.2vw':'1.6vw'}}>{role==="student"?'Leave Class':'Delete Class'}</button>
+
     </div>}
 </div>
   );
