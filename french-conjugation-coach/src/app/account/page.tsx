@@ -101,14 +101,14 @@ export default function Account(){
             
         totalScore = info!.total_score;
         streak = info!.streak;
-        present_score = Math.round((info!.present_corrects / info!.present_questions)*100);
-        imperfect_score = Math.round((info!.imperfect_corrects / info!.imperfect_questions)*100);
-        past_score = Math.round((info!.past_corrects / info!.past_questions)*100);
-        future_score = Math.round((info!.future_corrects / info!.future_questions)*100);
-        participle_score = Math.round((info!.participle_corrects / info!.participle_questions)*100);
-        imperative_score = Math.round((info!.imperative_corrects / info!.imperative_questions)*100);
-        subjunctive_score = Math.round((info!.subjunctive_corrects / info!.subjunctive_questions)*100);
-        conditional_score = Math.round((info!.conditional_corrects / info!.conditional_questions)*100);
+        present_score = info!.present_questions === 0 ? 0 : Math.round((info!.present_corrects / info!.present_questions) * 100);
+imperfect_score = info!.imperfect_questions === 0 ? 0 : Math.round((info!.imperfect_corrects / info!.imperfect_questions) * 100);
+past_score = info!.past_questions === 0 ? 0 : Math.round((info!.past_corrects / info!.past_questions) * 100);
+future_score = info!.future_questions === 0 ? 0 : Math.round((info!.future_corrects / info!.future_questions) * 100);
+participle_score = info!.participle_questions === 0 ? 0 : Math.round((info!.participle_corrects / info!.participle_questions) * 100);
+imperative_score = info!.imperative_questions === 0 ? 0 : Math.round((info!.imperative_corrects / info!.imperative_questions) * 100);
+subjunctive_score = info!.subjunctive_questions === 0 ? 0 : Math.round((info!.subjunctive_corrects / info!.subjunctive_questions) * 100);
+conditional_score = info!.conditional_questions === 0 ? 0 : Math.round((info!.conditional_corrects / info!.conditional_questions) * 100);
 
         const scores = [
           { tense: "Present", score: present_score },
@@ -155,14 +155,14 @@ export default function Account(){
     <p style={{position:'absolute', left:'0vw', top:'31vh', width:'50vw', textAlign:'center', fontSize: isPortrait ? '2.8vw' : '1.4vw', fontWeight:'300'}}>100% All time accuracy</p>
 
     <p style={{position:'absolute', left:'50vw', top:'5vh', width:'50vw', textAlign:'center', fontSize: isPortrait ? '3.6vw' : '1.8vw', fontWeight:'500'}}>Tense Accuracies</p>
-    <p style={{position:'absolute', left:'50vw', top:'12vh', width:'50vw', textAlign:'center', fontSize: isPortrait ? '2.4vw' : '1.2vw', fontWeight:'300', color: getColorForTense("Present")}}>{present_score}% Present</p>
-    <p style={{position:'absolute', left:'50vw', top:'17vh', width:'50vw', textAlign:'center', fontSize: isPortrait ? '2.4vw' : '1.2vw', fontWeight:'300', color: getColorForTense("Imperfect")}}>{imperfect_score}% Imperfect</p>
-    <p style={{position:'absolute', left:'50vw', top:'22vh', width:'50vw', textAlign:'center', fontSize: isPortrait ? '2.4vw' : '1.2vw', fontWeight:'300', color: getColorForTense("Past Participle")}}>{past_score}% Past Participle</p>
-    <p style={{position:'absolute', left:'50vw', top:'27vh', width:'50vw', textAlign:'center', fontSize: isPortrait ? '2.4vw' : '1.2vw', fontWeight:'300', color: getColorForTense("Future Simple")}}>{future_score}% Future Simple</p>
-    <p style={{position:'absolute', left:'50vw', top:'32vh', width:'50vw', textAlign:'center', fontSize: isPortrait ? '2.4vw' : '1.2vw', fontWeight:'300', color: getColorForTense("Present Participle")}}>{participle_score}% Present Participle</p>
-    <p style={{position:'absolute', left:'50vw', top:'37vh', width:'50vw', textAlign:'center', fontSize: isPortrait ? '2.4vw' : '1.2vw', fontWeight:'300', color: getColorForTense("Imperative")}}>{imperative_score}% Imperative</p>
-    <p style={{position:'absolute', left:'50vw', top:'42vh', width:'50vw', textAlign:'center', fontSize: isPortrait ? '2.4vw' : '1.2vw', fontWeight:'300', color: getColorForTense("Subjunctive")}}>{subjunctive_score}% Subjunctive</p>
-    <p style={{position:'absolute', left:'50vw', top:'47vh', width:'50vw', textAlign:'center', fontSize: isPortrait ? '2.4vw' : '1.2vw', fontWeight:'300', color: getColorForTense("Conditional")}}>{conditional_score}% Conditional</p>
+    <p style={{position:'absolute', left:'50vw', top:'12vh', width:'50vw', textAlign:'center', fontSize: isPortrait ? '3vw' : '1.5vw', fontWeight:'300', color: sortedScores[7].score > 0?'green':'red'}}>{sortedScores[7].score}% {sortedScores[7].tense}</p>
+    <p style={{position:'absolute', left:'50vw', top:'17vh', width:'50vw', textAlign:'center', fontSize: isPortrait ? '3vw' : '1.5vw', fontWeight:'300', color: sortedScores[6].score > 0?'green':'red'}}>{sortedScores[6].score}% {sortedScores[6].tense}</p>
+    <p style={{position:'absolute', left:'50vw', top:'22vh', width:'50vw', textAlign:'center', fontSize: isPortrait ? '3vw' : '1.5vw', fontWeight:'300', color: sortedScores[5].score === 100?'green': sortedScores[5].score === 0? 'red': 'white'}}>{sortedScores[5].score}% {sortedScores[5].tense}</p>
+    <p style={{position:'absolute', left:'50vw', top:'27vh', width:'50vw', textAlign:'center', fontSize: isPortrait ? '3vw' : '1.5vw', fontWeight:'300', color: sortedScores[4].score === 100?'green': sortedScores[4].score === 0? 'red': 'white'}}>{sortedScores[4].score}% {sortedScores[4].tense}</p>
+    <p style={{position:'absolute', left:'50vw', top:'32vh', width:'50vw', textAlign:'center', fontSize: isPortrait ? '3vw' : '1.5vw', fontWeight:'300', color: sortedScores[3].score === 100?'green': sortedScores[3].score === 0? 'red': 'white'}}>{sortedScores[3].score}% {sortedScores[3].tense}</p>
+    <p style={{position:'absolute', left:'50vw', top:'37vh', width:'50vw', textAlign:'center', fontSize: isPortrait ? '3vw' : '1.5vw', fontWeight:'300', color: sortedScores[2].score === 100?'green': sortedScores[2].score === 0? 'red': 'white'}}>{sortedScores[2].score}% {sortedScores[2].tense}</p>
+    <p style={{position:'absolute', left:'50vw', top:'42vh', width:'50vw', textAlign:'center', fontSize: isPortrait ? '3vw' : '1.5vw', fontWeight:'300', color: sortedScores[1].score < 100? 'red':'green'}}>{sortedScores[1].score}% {sortedScores[1].tense}</p>
+    <p style={{position:'absolute', left:'50vw', top:'47vh', width:'50vw', textAlign:'center', fontSize: isPortrait ? '3vw' : '1.5vw', fontWeight:'300', color: sortedScores[0].score < 100? 'red':'green'}}>{sortedScores[0].score}% {sortedScores[0].tense}</p>
   </> : <></>}
 
   <button onClick={() => {handleLogout()}} style={{position:'absolute', left:'38vw', top:'46vh', width:'24vw', height:'8vh', fontSize: isPortrait ? '3vw' : '1.5vw'}}>Log Out</button>
