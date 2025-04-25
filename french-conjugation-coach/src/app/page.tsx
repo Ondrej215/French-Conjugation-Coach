@@ -935,6 +935,50 @@ useEffect(() => {
     }
 
     const updateTenseStats = async () => {
+
+      // update daily streak
+const { data, error } = await supabase
+.from('TBLstudent')
+.select('last_updated_local_time, streak')
+.eq('student_id', session?.user.id)
+.single();
+
+if (error) {
+console.error('Error fetching student data:', error);
+return;
+}
+
+let streakCount = data.streak ?? 0; // fallback if null
+const today = new Date();
+const localDateStr = today.toLocaleDateString('en-CA');
+
+const lastUpdated = data.last_updated_local_time;
+
+if (lastUpdated !== localDateStr) {
+const yesterday = new Date(today);
+yesterday.setDate(today.getDate() - 1);
+const yesterdayStr = yesterday.toLocaleDateString('en-CA');
+
+if (lastUpdated === yesterdayStr) {
+  streakCount += 1;
+} else {
+  streakCount = 1; // also covers null case here
+}
+
+const { error: updateError } = await supabase
+  .from('TBLstudent')
+  .update({
+    last_updated_local_time: localDateStr,
+    streak: streakCount,
+  })
+  .eq('student_id', session?.user.id);
+
+if (updateError) {
+  console.error('Error updating streak:', updateError);
+}
+}
+
+
   const tenses = {
     present,
     imperfect,
