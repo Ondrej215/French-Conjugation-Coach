@@ -141,6 +141,21 @@ conditional_score = info!.conditional_questions === 0 ? 0 : Math.round((info!.co
       if (index >= sortedScores.length - 2) return "green";
       return "white";
     }
+    let accountStreak = 0; // <= declare at the top so it's visible everywhere
+
+    if (!!accountInfo) {
+      const lastUpdatedRaw = accountInfo.last_updated_local_time;
+      const lastUpdated = lastUpdatedRaw ? new Date(lastUpdatedRaw) : null;
+    
+      if (lastUpdated) {
+        const now = new Date();
+        const msInDay = 24 * 60 * 60 * 1000;
+        const daysDifference = Math.floor((now.getTime() - lastUpdated.getTime()) / msInDay);
+    
+        accountStreak = daysDifference > 1 ? 0 : accountInfo.streak;
+      }
+    }
+
 
     return(<>
     <p style={{position:'absolute', width:'100vw', top:'10vh', textAlign:'center', fontSize: isPortrait ? '7vw' : '3.5vw', fontWeight:'500'}}>{username}</p>
@@ -151,7 +166,7 @@ conditional_score = info!.conditional_questions === 0 ? 0 : Math.round((info!.co
   <>
     <p style={{position:'absolute', left:'0vw', top:'5vh', width:'50vw', textAlign:'center', fontSize: isPortrait ? '3.6vw' : '1.8vw', fontWeight:'500'}}>All Time Stats</p>
     <p style={{position:'absolute', left:'0vw', top:'15vh', width:'50vw', textAlign:'center', fontSize: isPortrait ? '2.8vw' : '1.4vw', fontWeight:'300'}}>{totalScore} Total Points</p>
-    <p style={{position:'absolute', left:'0vw', top:'23vh', width:'50vw', textAlign:'center', fontSize: isPortrait ? '2.8vw' : '1.4vw', fontWeight:'300'}}>{streak} Day Streak</p>
+    <p style={{position:'absolute', left:'0vw', top:'23vh', width:'50vw', textAlign:'center', fontSize: isPortrait ? '2.8vw' : '1.4vw', fontWeight:'300'}}>{accountStreak} Day Streak</p>
     <p style={{position:'absolute', left:'0vw', top:'31vh', width:'50vw', textAlign:'center', fontSize: isPortrait ? '2.8vw' : '1.4vw', fontWeight:'300'}}>100% All time accuracy</p>
 
     <p style={{position:'absolute', left:'50vw', top:'5vh', width:'50vw', textAlign:'center', fontSize: isPortrait ? '3.6vw' : '1.8vw', fontWeight:'500'}}>Tense Accuracies</p>

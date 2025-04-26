@@ -7,7 +7,7 @@ export const useSession = () => {
   const [session, setSession] = useState<Session | null>(null)
   const [loading, setLoading] = useState(true)
   const [role, setRole] = useState<'teacher' | 'student' | null>(null)
-  const [accountInfo, setAccountInfo] = useState(null);
+  const [accountInfo, setAccountInfo] = useState<any>(null);
 
   useEffect(() => {
     const getSession = async () => {
