@@ -5,7 +5,7 @@ import { supabase } from '../../../lib/supabaseClient';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
-
+// CHANGE LOG IN, SIGN UP BACKGROUND COLOR
 export default function Account(){
 
     const { session, loading, role, accountInfo} = useSession();
@@ -95,6 +95,7 @@ export default function Account(){
       conditional_corrects: number;
     } | null = null;
     let sortedScores:any = [];
+    let overallScore;
 
     if (accountInfo && role === "student"){
        info = accountInfo as typeof info;
@@ -123,8 +124,15 @@ conditional_score = info!.conditional_questions === 0 ? 0 : Math.round((info!.co
 
         sortedScores = [...scores].sort((a, b) => a.score - b.score);
 
+        const totalQuestions = info!.present_questions + info!.imperfect_questions + info!.past_questions + info!.future_questions + info!.participle_questions + info!.imperative_questions + info!.subjunctive_questions + info!.conditional_questions;
+
+const totalCorrects = info!.present_corrects + info!.imperfect_corrects + info!.past_corrects + info!.future_corrects + info!.participle_corrects + info!.imperative_corrects + info!.subjunctive_corrects + info!.conditional_corrects;
+
+overallScore = totalQuestions === 0 ? 0 : Math.round((totalCorrects / totalQuestions) * 100);
+
     }else{
       totalScore = '0';
+      overallScore = '0%';
     }
 
     type ScoreEntry = {
@@ -167,7 +175,7 @@ conditional_score = info!.conditional_questions === 0 ? 0 : Math.round((info!.co
     <p style={{position:'absolute', left:'0vw', top:'5vh', width:'50vw', textAlign:'center', fontSize: isPortrait ? '3.6vw' : '1.8vw', fontWeight:'500'}}>All Time Stats</p>
     <p style={{position:'absolute', left:'0vw', top:'15vh', width:'50vw', textAlign:'center', fontSize: isPortrait ? '2.8vw' : '1.4vw', fontWeight:'300'}}>{totalScore} Total Points</p>
     <p style={{position:'absolute', left:'0vw', top:'23vh', width:'50vw', textAlign:'center', fontSize: isPortrait ? '2.8vw' : '1.4vw', fontWeight:'300'}}>{accountStreak} Day Streak</p>
-    <p style={{position:'absolute', left:'0vw', top:'31vh', width:'50vw', textAlign:'center', fontSize: isPortrait ? '2.8vw' : '1.4vw', fontWeight:'300'}}>100% All time accuracy</p>
+    <p style={{position:'absolute', left:'0vw', top:'31vh', width:'50vw', textAlign:'center', fontSize: isPortrait ? '2.8vw' : '1.4vw', fontWeight:'300'}}>{overallScore}% All time accuracy</p>
 
     <p style={{position:'absolute', left:'50vw', top:'5vh', width:'50vw', textAlign:'center', fontSize: isPortrait ? '3.6vw' : '1.8vw', fontWeight:'500'}}>Tense Accuracies</p>
     <p style={{position:'absolute', left:'50vw', top:'12vh', width:'50vw', textAlign:'center', fontSize: isPortrait ? '3vw' : '1.5vw', fontWeight:'300', color: sortedScores[7].score > 0?'green':'red'}}>{sortedScores[7].score}% {sortedScores[7].tense}</p>
