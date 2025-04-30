@@ -139,7 +139,7 @@ export default function SignUp(){
 
     return(<>   
     <p style={{fontSize:isPortrait?'5vw':'2.5vw', fontWeight:'500', position:'absolute', left:'0vw', width:'100vw', textAlign:'center', top:'8vh'}}>Sign Up</p>
-    <div style={{background:'#1c1e28', position:'absolute', left:isPortrait?'5vw':'30vw', top:'17vh', width:isPortrait?'90vw':'40vw', height:'53vh', borderRadius:'15px'}}>
+    <div style={{background:'#272738', position:'absolute', left:isPortrait?'5vw':'30vw', top:'17vh', width:isPortrait?'90vw':'40vw', height:'53vh', borderRadius:'15px'}}>
 
     <p style={{fontSize:isPortrait?'3vw':'1.5vw', position:'absolute', left:isPortrait?'3vw':'2vw', top:'5vh', height:'11vh', alignContent:'center'}}>Username</p>
     <input value={usernameInput} onChange={e => setUsernameInput(e.target.value)} style={{position:'absolute', left:isPortrait?'28vw':'15vw', top:'8vh', width:isPortrait?'55vw':'20vw', height:'8vh'}}/>

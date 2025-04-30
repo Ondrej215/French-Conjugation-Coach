@@ -72,6 +72,8 @@ const imperativeIncorrectMessages = ["Not quite what the imperative demanded..."
 const generalCorrectMessages = ["That was parfait! Good travail.", "That was textbook, or should I say cahier?", "Correct! L'Académie Française applaud you.", "Incroyable! That was parfait.", "I tip my chapeau to you!", "Très bien!", "You: 1, French verbs: 0. Next round!"]
 const generalIncorrectMessages = ["That was close. Onto the next one!", "French verbs: 1, You: 0. Next round!", "That answer had a certain... je ne sais quoi... of incorrectness.",  "That answer leaves something to be désiré."]
 
+const todayDate = new Date().toISOString().split('T')[0];
+
   // track user stats for each tense
   const [present, setPresent] = useState({
     numQuestions: 0,
@@ -1099,9 +1101,14 @@ if (fetchClassError) {
   console.error('Fetch class rows failed:', fetchClassError);
 } else {
   for (const row of classRows) {
+
+    const lastUpdatedString = typeof row.last_updated === 'string' 
+  ? row.last_updated 
+  : new Date(row.last_updated).toISOString().split('T')[0];
     // check class rules
 
     const newScore = row.score + progress.points;
+    const newDayScore = lastUpdatedString === todayDate?(row.points_today + progress.points):progress.points;
     const newPresentQs = row.present_questions + present.numQuestions;
     const newPresentAs = row.present_corrects + present.numCorrect;
     const newImperfectQs = row.imperfect_questions + imperfect.numQuestions;
@@ -1121,27 +1128,30 @@ if (fetchClassError) {
 
 
     const { error: updateClassError } = await supabase
-      .from('TBLstudentclass')
-      .update({ 
-        score: newScore, 
-        present_questions: newPresentQs,
-        present_corrects: newPresentAs,
-        imperfect_questions: newImperfectQs,
-        imperfect_corrects: newImperfectAs,
-        past_questions: newPastQs,
-        past_corrects: newPastAs,
-        future_questions: newFutureQs,
-        future_corrects: newFutureAs,
-        participle_questions: newParticipleQs,
-        participle_corrects: newParticipleAs,
-        imperative_questions: newImperativeQs,
-        imperative_corrects: newImperativeAs,
-        subjunctive_questions: newSubjunctiveQs,
-        subjunctive_corrects: newSubjunctiveAs,
-        conditional_questions: newConditionalQs,
-        conditional_corrects: newConditionalAs, })
-      .eq('student_id', session.user.id)
-      .eq('class_id', row.class_id);
+  .from('TBLstudentclass')
+  .update({ 
+    score: newScore, 
+    present_questions: newPresentQs,
+    present_corrects: newPresentAs,
+    imperfect_questions: newImperfectQs,
+    imperfect_corrects: newImperfectAs,
+    past_questions: newPastQs,
+    past_corrects: newPastAs,
+    future_questions: newFutureQs,
+    future_corrects: newFutureAs,
+    participle_questions: newParticipleQs,
+    participle_corrects: newParticipleAs,
+    imperative_questions: newImperativeQs,
+    imperative_corrects: newImperativeAs,
+    subjunctive_questions: newSubjunctiveQs,
+    subjunctive_corrects: newSubjunctiveAs,
+    conditional_questions: newConditionalQs,
+    conditional_corrects: newConditionalAs,
+    points_today: newDayScore,
+    last_updated: new Date().toISOString().split('T')[0]
+  })
+  .eq('student_id', session.user.id)
+  .eq('class_id', row.class_id);
 
     if (updateClassError) {
       console.error(`Update failed for class_id ${row.class_id}:`, updateClassError);

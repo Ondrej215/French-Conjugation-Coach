@@ -67,7 +67,7 @@ export default function LogIn(){
         </p>
         <div
           style={{
-            background: '#1c1e28',
+            background: '#272738',
             position: 'absolute',
             left: isPortrait ? '5vw' : '30vw',
             top: '17vh',

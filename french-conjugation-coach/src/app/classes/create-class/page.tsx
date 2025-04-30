@@ -97,7 +97,7 @@ export default function CreateClass(){
     }
 
     return(<>
-    <div style={{position:'absolute', left:isPortrait?'10vw':'20vw', top:'15vh', height:'70vh', width:isPortrait?'80vw':'60vw', backgroundColor:'#1c1e28', borderRadius:'15px'}}></div>
+    <div style={{position:'absolute', left:isPortrait?'10vw':'20vw', top:'15vh', height:'70vh', width:isPortrait?'80vw':'60vw', backgroundColor:'#272738', borderRadius:'15px'}}></div>
     <p style={{textAlign:'center', fontSize:isPortrait?'3.6vw':'1.8vw', position:'absolute', top:'20vh', width:'100vw'}}>Pick a Class Name</p>
     <input value={classnameInput} onChange={e => {setClassnameInput(e.target.value)}} type='text' style={{position:'absolute', left:isPortrait?'20vw':'35vw', width:isPortrait?'60vw':'30vw', top:'35vh', height:'8vh', fontSize:isPortrait?'3.6vw':'1.8vw'}}></input>
 
