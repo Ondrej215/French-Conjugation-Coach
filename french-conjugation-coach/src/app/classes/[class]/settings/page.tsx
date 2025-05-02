@@ -148,7 +148,7 @@ export default function ClassSettings() {
         <button style={{position:'absolute', left:isPortrait?'25vw':'27.5vw', width:isPortrait?'40vw':'20vw', height:'7vh', marginTop:'4vh'}}>Save</button>
   
         <p style={{ width: isPortrait ? '90vw' : '75vw', textAlign: 'center', marginTop: '15vh', fontSize: isPortrait ? '2.8vw' : '1.4vw' }}>
-          You can manage your class' students here
+        You can manage the students in your class here
         </p>
   
         <button
