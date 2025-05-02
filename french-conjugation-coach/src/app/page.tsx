@@ -939,6 +939,8 @@ useEffect(() => {
     const updateTenseStats = async () => {
 
       // update daily streak
+  
+if (role=='student' && !!session){
 const { data, error } = await supabase
 .from('TBLstudent')
 .select('last_updated_local_time, streak')
@@ -978,7 +980,7 @@ const { error: updateError } = await supabase
 if (updateError) {
   console.error('Error updating streak:', updateError);
 }
-}
+}}
 
 
   const tenses = {
