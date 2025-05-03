@@ -47,7 +47,7 @@ export default function FAQAbout(){
 
 <br></br>
 
-<p>During drills, you will be given a French verb in its infinitive form. (This is the equivalent of “to __” in English, for example, "to play" is an infinitive.)</p>
+<p>During drills, you will be given a French verb in its infinitive form. (This is the equivalent of &quot;to __&quot; in English, for example, &quot;to play&quot; is an infinitive.)</p>
 <p>Your task is to conjugate the verb into the correct tense and pronoun given. You do not need to type the pronoun alongside the conjugated form.</p>
 
 <br></br>
