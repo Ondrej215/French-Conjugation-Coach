@@ -67,7 +67,7 @@ export default function RootLayout({
               className="menuButton"
             />
             </Link>
-            <Link href="/faq-about">
+            <Link href="/help">
             <Image 
               src="/images/helpIcon.png" 
               alt="France Flag" 

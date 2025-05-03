@@ -1,0 +1,15 @@
+.scrollDiv{
+    height: 100vh;
+    overflow-y:auto;
+    overflow-x:hidden;
+}
+
+.helpLink{
+    transition: transform 0.2s ease;
+    display: inline-block;
+}
+
+.helpLink:hover{
+    transform: scale(1.15);
+    cursor:pointer;
+}
