@@ -61,6 +61,20 @@ export default function FAQAbout(){
 
                 <p id="classes" style={{fontSize:isPortrait?'6vw':'3vw', marginTop:'6vh', fontWeight:'500'}}>Classes</p>
 
+                <p>Classes allow teachers and students to view group performance in verb drills. Each class also has a leaderboard where students can compete by earning points in drills.</p>
+
+<p>Only teacher accounts can create classes. After creating a class, teachers can view and share the join code from the class dashboard. Students can join by entering this code after clicking the &quot;Join Class&quot; button in the classes menu. Each class can only have one teacher. Both teachers and students can create or join as many classes as they want.</p>
+
+<br></br>
+
+<p>Teachers can manage class rules to set standards for drills that count towards class stats. They can require strict accents to be turned on, set a daily maximum number of points students can earn, and set a minimum number of questions per drill.</p>
+
+<p>Students can still complete drills however they would like, all drills count toward their personal stats. However, a drill will only count towards a class if it follows the rules of that class. Students do not need to do separate drills for each class; one drill can apply to all classes they are part of, as long as it meets the rules.</p>
+
+<br></br>
+
+<p>In the class settings, teachers can also reset class stats and start a new leaderboard. When this happens, the student who is top of the leaderboard will be marked as the champion, and all stats will reset. This is useful for tracking new trends in tense accuracy or starting fresh at the beginning of a new term if the class is for a school.</p>
+
                 <p id="conjugationHelp" style={{fontSize:isPortrait?'6vw':'3vw', marginTop:'6vh', fontWeight:'500'}}>Conjugation Help</p>
 
             </div>
