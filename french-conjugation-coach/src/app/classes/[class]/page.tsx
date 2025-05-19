@@ -495,7 +495,13 @@ const freshTenseAccuracies = [
             </div>
         </div>
 
-        <button className={styles.endButton} style={{width:isPortrait?'50vw':'20vw', backgroundColor:'red', height:'7vh', marginTop:'5vh', marginBottom:'15vh', fontSize:isPortrait?'3.2vw':'1.6vw'}} onClick={() => {role==='student'?setLeaveWarning(true):setDeleteWarning(true)}}>{role==="student"?'Leave Class':'Delete Class'}</button>
+        <button className={styles.endButton} style={{width:isPortrait?'50vw':'20vw', backgroundColor:'red', height:'7vh', marginTop:'5vh', marginBottom:'15vh', fontSize:isPortrait?'3.2vw':'1.6vw'}} onClick={() => {
+  if (role === 'student') {
+    setLeaveWarning(true);
+  } else {
+    setDeleteWarning(true);
+  }
+}}>{role==="student"?'Leave Class':'Delete Class'}</button>
 
     </div>}
 </div>
