@@ -31,12 +31,10 @@ export default function FAQAbout(){
     return(<>
         <div className={styles.scrollDiv}>
             <p style={{fontSize:isPortrait?'10vw':'5vw', width:'100vw', textAlign:'center', marginTop:'6vh'}}>Help</p>
-            <div style={{minHeight:'200vh', backgroundColor:'#0C0C13', marginTop:'4vh', textAlign:'center'}}>
+            <div style={{minHeight:'100vh', backgroundColor:'#0C0C13', marginTop:'4vh', textAlign:'center'}}>
                 <Link className={styles.helpLink} href='#verbDrills' style={{color:'#3B6FBF', fontSize:isPortrait?'4vw':'2vw', marginTop:'3vh'}}>Verb Drills</Link>
                 <br></br>
                 <Link className={styles.helpLink} href='#classes' style={{color:'#3B6FBF', fontSize:isPortrait?'4vw':'2vw', marginTop:'3vh'}}>Classes</Link>
-                <br></br>
-                <Link className={styles.helpLink} href='#conjugationHelp' style={{color:'#3B6FBF', fontSize:isPortrait?'4vw':'2vw', marginTop:'3vh'}}>Conjugation Help</Link>
                 <br></br>
 
                 <p id="verbDrills" style={{fontSize:isPortrait?'6vw':'3vw', marginTop:'6vh', fontWeight:'500'}}>Verb Drills</p>
@@ -75,8 +73,7 @@ export default function FAQAbout(){
 
 <p>In the class settings, teachers can also reset class stats and start a new leaderboard. When this happens, the student who is top of the leaderboard will be marked as the champion, and all stats will reset. This is useful for tracking new trends in tense accuracy or starting fresh at the beginning of a new term if the class is for a school.</p>
 
-                <p id="conjugationHelp" style={{fontSize:isPortrait?'6vw':'3vw', marginTop:'6vh', fontWeight:'500'}}>Conjugation Help</p>
-
+<br></br><br></br><br></br><br></br>
             </div>
         </div>
     </>);

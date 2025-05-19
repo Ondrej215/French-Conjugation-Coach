@@ -35,6 +35,10 @@ const [sortedAccuracies, setSortedAccuracies] = useState<any>([]);
 const [pointsToday, setPointsToday] = useState<number>(0);
 const [lastUpdated, setLastUpdated] = useState<string | null>(null);
 const [prevRank, setPrevRank] = useState<number | null>(null);
+const [deleteWarning, setDeleteWarning] = useState<boolean>(false);
+const [leaveWarning, setLeaveWarning] = useState<boolean>(false);
+const [kickWarning, setKickWarning] = useState<boolean>(false);
+const [studentToKick, setStudentToKick] = useState({ id: '', name: '' });
 
 const today = new Date().toISOString().split('T')[0];
 
@@ -250,6 +254,57 @@ const freshTenseAccuracies = [
     checkAuthorization();
   }, [session, validClass, teacherID, classId, router, loading]);
 
+  async function leaveClass() {
+    if (!!session){
+    const { data, error } = await supabase
+      .from('TBLstudentclass')
+      .delete()
+      .match({ student_id: session.user.id, class_id: classId });
+  
+    if (error) {
+      console.error('Error leaving class:', error);
+      return null;
+    }
+
+    router.replace('/classes');
+  
+    return data;}
+  }
+  
+  async function deleteClass() {
+    if (!!session){
+    const { data, error } = await supabase
+      .from('TBLclass')
+      .delete()
+      .match({ class_id: classId });
+  
+    if (error) {
+      console.error('Error deleting class:', error);
+      return null;
+    }
+
+    router.replace('/classes');
+  
+    return data;
+    }
+  }
+
+  async function kickStudent(){
+    if (!!session){
+        const { data, error } = await supabase
+        .from('TBLstudentclass')
+        .delete()
+        .match({student_id:studentToKick.id, class_id:classId})
+
+        if (error) {
+            console.error('Error kicking student:', error);
+            return null;
+          }
+
+        setKickWarning(false);
+    }
+  }
+
   if (loading || validClass === null) return null;
 
   if (!session) {
@@ -259,6 +314,7 @@ const freshTenseAccuracies = [
   if (!validClass) return null;
 
   return (
+    <>
     <div className={styles.scrollableClass}>
     <p style={{ fontSize: isPortrait ? '4vw' : '2.5vw', textAlign: 'center', fontWeight: '500', marginTop: '11vh' }}>
         {className}
@@ -306,56 +362,107 @@ const freshTenseAccuracies = [
             </div>
         </div>
 
-        <div style={{
-            backgroundColor: '#0C0C13',
-            borderRadius: '15px',
-            marginTop: '5vh',
-            padding: '2vh',
-            width: '90%',
-            marginLeft: 'auto',
-            marginRight: 'auto',
-        }}>
-            <div style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                padding: '1vh 2vw',
-                borderBottom: '0.5vh solid rgb(52, 47, 72)',
-                fontWeight: '600',
-                color: '#fff',
-            }}>
-                <span style={{ width: '10%', marginLeft:isPortrait?'-2vw':'-0.5vw', fontSize:isPortrait?'1.6vw':'1.4vw' }}>Rank</span>
-                <span style={{ width: '30%', marginLeft:isPortrait?'3vw':'1vw', fontSize:isPortrait?'1.6vw':'1.4vw' }}>Name</span>
-                <span style={{ width: '20%', marginLeft:isPortrait?'-2vw':'0vw', fontSize:isPortrait?'1.6vw':'1.4vw' }}>Points</span>
-                <span style={{ width: '20%', marginLeft:isPortrait?'0vw':'0vw' , fontSize:isPortrait?'1.6vw':'1.4vw' }}>Accuracy</span>
-                <span style={{ width: '20%', marginLeft:isPortrait?'0vw':'0vw' , fontSize:isPortrait?'1.6vw':'1.4vw' }}>Questions</span>
+        <div style={{ 
+    backgroundColor: '#0C0C13',
+    borderRadius: '15px',
+    marginTop: '5vh',
+    padding: '2vh',
+    width: '90%',
+    marginLeft: 'auto',
+    marginRight: 'auto',
+}}>
+    {/* HEADER */}
+    <div style={{
+        display: 'flex',
+        justifyContent: 'space-between',
+        padding: '1vh 2vw',
+        borderBottom: '0.5vh solid rgb(52, 47, 72)',
+        fontWeight: '600',
+        color: '#fff',
+        fontSize: isPortrait ? '2.8vw' : '1.4vw'
+    }}>
+        <span style={{ 
+    width: '12%', 
+    minWidth: '35px',
+    textAlign: 'left'
+}}>Rank</span>
+
+<span style={{ 
+    width: isPortrait ? '45%' : '30%', 
+    minWidth: '80px',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
+    textAlign: 'left'
+}}>Name</span>
+        <span style={{ width: '20%' }}>Points</span>
+        <span style={{ width: '20%' }}>Accuracy</span>
+        <span style={{ width: '20%' }}>Questions</span>
+    </div>
+
+    {/* ROWS */}
+    {students.map((student, index) => {
+        const accuracy = student.totalQuestions > 0
+            ? ((student.totalCorrects / student.totalQuestions) * 100).toFixed(1)
+            : '0.0';
+
+        return (
+            <div
+                key={student.student_id}
+                style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    padding: '1vh 2vw',
+                    borderBottom: '0px solid #222',
+                    color: '#ccc',
+                    alignItems: 'center',
+                    fontSize: isPortrait ? '2.8vw' : '1.4vw'
+                }}
+            >
+               <span style={{ 
+    width: '12%', 
+    minWidth: '35px' 
+}}>{index + 1}</span>
+
+<div style={{ 
+    width: isPortrait ? '45%' : '30%', 
+    minWidth: '80px',
+    display: 'flex', 
+    alignItems: 'center', 
+    gap: '1vw',
+    overflow: 'hidden'
+}}>
+    <span style={{
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
+        whiteSpace: 'nowrap',
+    }}>{student.student_name}</span>
+    {role==='teacher' && <button className='redButton' onClick={() => {
+            setStudentToKick({ id: student.student_id.toString(), name: student.student_name });
+            setKickWarning(true);
+        }} style={{
+        padding: '0 1vw',
+        backgroundColor: 'red',
+        borderRadius: '5px',
+        color: '#fff',
+        fontSize: isPortrait ? '2.4vw' : '1.2vw',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        whiteSpace: 'nowrap',
+        width:isPortrait?'9vw':'5vw'
+    }}>
+        Kick
+    </button>}
+</div>
+
+                <span style={{ width: '20%' }}>{student.score}</span>
+                <span style={{ width: '20%' }}>{accuracy}%</span>
+                <span style={{ width: '20%' }}>{student.totalQuestions}</span>
             </div>
-
-            {students.map((student, index) => {
-                const accuracy = student.totalQuestions > 0
-                    ? ((student.totalCorrects / student.totalQuestions) * 100).toFixed(1)
-                    : '0.0';
-
-                return (
-                    <div
-                        key={student.student_id}
-                        style={{
-                            display: 'flex',
-                            justifyContent: 'space-between',
-                            marginLeft:'1.5vw',
-                            padding: '1vh 1vw',
-                            borderBottom: '0px solid #222',
-                            color: '#ccc',
-                        }}
-                    >
-                        <span style={{ width: '10%' }}>{index + 1}</span>
-                        <span style={{ width: '30%' }}>{student.student_name}</span>
-                        <span style={{ width: '20%' }}>{student.score}</span>
-                        <span style={{ width: '20%' }}>{accuracy}%</span>
-                        <span style={{ width: '20%' }}>{student.totalQuestions}</span>
-                    </div>
-                );
-            })}
-        </div>
+        );
+    })}
+</div>
 
         <div style={{display:isPortrait?'block':'flex', width:'100vw', justifyContent:'center', marginTop:'10vh', justifyItems:'center'}}>
         <div style={{backgroundColor:'#2b2c3c', width:isPortrait?'85vw':'40vw', height:isPortrait?'30vh':'50vh', marginTop:'4vh', borderRadius:'15px', boxShadow:'10px 10px 10px rgba(0, 0, 0, 0.5)', textAlign:'center', overflowY:'auto'}}>
@@ -368,7 +475,7 @@ const freshTenseAccuracies = [
       .map((student, index) => (
         <div key={student.id || index} style={{marginBottom:'1vh'}}>
           <span style={{fontSize:isPortrait?'3.5vw':'1.5vw', color:'white'}}>
-            {index + 1}. {student.student_name} - {student.numWins} wins
+            {index + 1}. {student.student_name} - {student.numWins} win(s)
           </span>
         </div>
       ))}
@@ -388,9 +495,105 @@ const freshTenseAccuracies = [
             </div>
         </div>
 
-        <button className={styles.endButton} style={{width:isPortrait?'50vw':'20vw', backgroundColor:'red', height:'7vh', marginTop:'5vh', marginBottom:'15vh', fontSize:isPortrait?'3.2vw':'1.6vw'}}>{role==="student"?'Leave Class':'Delete Class'}</button>
+        <button className={styles.endButton} style={{width:isPortrait?'50vw':'20vw', backgroundColor:'red', height:'7vh', marginTop:'5vh', marginBottom:'15vh', fontSize:isPortrait?'3.2vw':'1.6vw'}} onClick={() => {role==='student'?setLeaveWarning(true):setDeleteWarning(true)}}>{role==="student"?'Leave Class':'Delete Class'}</button>
 
     </div>}
 </div>
+
+{deleteWarning && (
+  <>
+    <div style={{
+      position: 'fixed',
+      top: 0,
+      left: 0,
+      width: '100vw',
+      height: '100vh',
+      backdropFilter: 'blur(5px)',
+      backgroundColor: 'rgba(0, 0, 0, 0.3)',
+      zIndex: 10
+    }}></div>
+    
+    <div style={{
+      position: 'fixed',
+      background: 'white',
+      left: isPortrait ? '10vw' : '25vw',
+      top: '25vh',
+      width: isPortrait ? '80vw' : '50vw',
+      height: '50vh',
+      zIndex: 11,
+      borderRadius: '15px',
+      backgroundColor:'#31324B'
+    }}>
+        <p style={{fontSize:isPortrait?'3.8vw':'1.6vw', width:isPortrait?'80vw':'50vw', textAlign:'center', marginTop:'6vh'}}>Are you sure you want to delete {className}? <br></br> This cannot be undone.</p>
+      <button onClick={() => { deleteClass() }} style={{position:'absolute', left:isPortrait?'10vw':'5vw', width:isPortrait?'28vw':'18vw', top:'35vh', height:'7vh', fontSize:isPortrait?'4vw':'2vw'}}>Yes</button>
+      <button onClick={() => { setDeleteWarning(false) }} style={{position:'absolute', left:isPortrait?'45vw':'27vw', width:isPortrait?'28vw':'18vw', top:'35vh', height:'7vh', fontSize:isPortrait?'4vw':'2vw'}}>No</button>
+    </div>
+  </>
+)}
+
+{leaveWarning && (
+  <>
+    <div style={{
+      position: 'fixed',
+      top: 0,
+      left: 0,
+      width: '100vw',
+      height: '100vh',
+      backdropFilter: 'blur(5px)',
+      backgroundColor: 'rgba(0, 0, 0, 0.3)',
+      zIndex: 10
+    }}></div>
+    
+    <div style={{
+      position: 'fixed',
+      background: 'white',
+      left: isPortrait ? '10vw' : '25vw',
+      top: '25vh',
+      width: isPortrait ? '80vw' : '50vw',
+      height: '50vh',
+      zIndex: 11,
+      borderRadius: '15px',
+      backgroundColor:'#31324B'
+    }}>
+        <p style={{fontSize:isPortrait?'3.8vw':'1.6vw', width:isPortrait?'80vw':'50vw', textAlign:'center', marginTop:'6vh'}}>Are you sure you want to leave {className}?</p>
+      <button onClick={() => { leaveClass() }} style={{position:'absolute', left:isPortrait?'10vw':'5vw', width:isPortrait?'28vw':'18vw', top:'35vh', height:'7vh', fontSize:isPortrait?'4vw':'2vw'}}>Yes</button>
+      <button onClick={() => { setLeaveWarning(false) }} style={{position:'absolute', left:isPortrait?'45vw':'27vw', width:isPortrait?'28vw':'18vw', top:'35vh', height:'7vh', fontSize:isPortrait?'4vw':'2vw'}}>No</button>
+    </div>
+  </>
+)}
+
+{kickWarning && (<>
+    <div style={{
+      position: 'fixed',
+      top: 0,
+      left: 0,
+      width: '100vw',
+      height: '100vh',
+      backdropFilter: 'blur(5px)',
+      backgroundColor: 'rgba(0, 0, 0, 0.3)',
+      zIndex: 10
+    }}></div>
+    
+    <div style={{
+      position: 'fixed',
+      background: 'white',
+      left: isPortrait ? '10vw' : '25vw',
+      top: '25vh',
+      width: isPortrait ? '80vw' : '50vw',
+      height: '50vh',
+      zIndex: 11,
+      borderRadius: '15px',
+      backgroundColor:'#31324B'
+    }}>
+        <p style={{fontSize:isPortrait?'3.8vw':'1.6vw', width:isPortrait?'80vw':'50vw', textAlign:'center', marginTop:'6vh'}}>Are you sure you want to kick {studentToKick.name} from this class?</p>
+      <button  onClick={async () => {
+        await kickStudent();
+        window.location.reload();
+    }} style={{position:'absolute', left:isPortrait?'10vw':'5vw', width:isPortrait?'28vw':'18vw', top:'35vh', height:'7vh', fontSize:isPortrait?'4vw':'2vw'}}>Yes</button>
+      <button onClick={() => { setKickWarning(false) }} style={{position:'absolute', left:isPortrait?'45vw':'27vw', width:isPortrait?'28vw':'18vw', top:'35vh', height:'7vh', fontSize:isPortrait?'4vw':'2vw'}}>No</button>
+    </div>
+  </>)}
+
+</>
   );
 }

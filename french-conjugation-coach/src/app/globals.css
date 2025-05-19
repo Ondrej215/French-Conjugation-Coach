@@ -111,6 +111,14 @@ select {
   padding: 1rem 1rem;
 }
 
+.redButton{
+  transition: transform 0.2s ease;
+}
+
+.redButton:hover{
+  transform: scale(1.2);
+  box-shadow: 0 0 10px 4px rgba(240, 45, 45, 0.3);
+}
 
 /*
   git add .

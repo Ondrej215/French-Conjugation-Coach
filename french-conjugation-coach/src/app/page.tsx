@@ -1094,9 +1094,14 @@ if (updateError) {
     if (updateError) console.error('Update failed:', updateError);
   }
 
+  if (leaderboardMode){
+
   const { data: classRows, error: fetchClassError } = await supabase
   .from('TBLstudentclass')
-  .select('*')
+  .select(`
+    *,
+    TBLclass ( * )
+  `)
   .eq('student_id', session.user.id);
 
 if (fetchClassError) {
@@ -1104,29 +1109,50 @@ if (fetchClassError) {
 } else {
   for (const row of classRows) {
 
+    console.log(row);
+    console.log(row.TBLclass);
+    console.log(row.TBLclass.accents_required === 'false');
+
+    console.log('strict accents');
+    console.log(row.TBLclass.accents_required === 'false' || strictAccents);
+    console.log('min questions');
+    console.log(row.TBLclass.min_questions <= progress.questionsAnswered);
+
+    if ((row.TBLclass.accents_required == 'false' || strictAccents) && (row.TBLclass.min_questions <= progress.questionsAnswered)){
+
     const lastUpdatedString = typeof row.last_updated === 'string' 
   ? row.last_updated 
   : new Date(row.last_updated).toISOString().split('T')[0];
     // check class rules
 
-    const newScore = row.score + progress.points;
-    const newDayScore = lastUpdatedString === todayDate?(row.points_today + progress.points):progress.points;
-    const newPresentQs = row.present_questions + present.numQuestions;
-    const newPresentAs = row.present_corrects + present.numCorrect;
-    const newImperfectQs = row.imperfect_questions + imperfect.numQuestions;
-    const newImperfectAs = row.imperfect_corrects + imperfect.numCorrect;
-    const newPastQs = row.past_questions + past.numQuestions;
-    const newPastAs = row.past_corrects + past.numCorrect;
-    const newFutureQs = row.future_questions + future.numQuestions;
-    const newFutureAs = row.future_corrects + future.numCorrect;
-    const newParticipleQs = row.participle_questions + participle.numQuestions;
-    const newParticipleAs = row.participle_corrects + participle.numCorrect;
-    const newImperativeQs = row.imperative_questions + imperative.numQuestions;
-    const newImperativeAs = row.imperative_corrects + imperative.numCorrect;
-    const newSubjunctiveQs = row.subjunctive_questions + subjunctive.numQuestions;
-    const newSubjunctiveAs = row.subjunctive_corrects + subjunctive.numCorrect;
-    const newConditionalQs = row.conditional_questions + conditional.numQuestions;
-    const newConditionalAs = row.conditional_corrects + conditional.numCorrect;
+    let pointsToAdd = progress.points;
+const todayPoints = lastUpdatedString === todayDate ? row.points_today : 0;
+const potentialDayScore = todayPoints + pointsToAdd;
+
+// Clamp points if they would go over today's limit
+if (row.TBLclass.max_points !== null && potentialDayScore > row.TBLclass.max_points) {
+  pointsToAdd = Math.max(0, row.TBLclass.max_points - todayPoints);
+}
+
+const newScore = row.score + pointsToAdd;
+const newDayScore = todayPoints + pointsToAdd;
+
+const newPresentQs = row.present_questions + present.numQuestions;
+const newPresentAs = row.present_corrects + present.numCorrect;
+const newImperfectQs = row.imperfect_questions + imperfect.numQuestions;
+const newImperfectAs = row.imperfect_corrects + imperfect.numCorrect;
+const newPastQs = row.past_questions + past.numQuestions;
+const newPastAs = row.past_corrects + past.numCorrect;
+const newFutureQs = row.future_questions + future.numQuestions;
+const newFutureAs = row.future_corrects + future.numCorrect;
+const newParticipleQs = row.participle_questions + participle.numQuestions;
+const newParticipleAs = row.participle_corrects + participle.numCorrect;
+const newImperativeQs = row.imperative_questions + imperative.numQuestions;
+const newImperativeAs = row.imperative_corrects + imperative.numCorrect;
+const newSubjunctiveQs = row.subjunctive_questions + subjunctive.numQuestions;
+const newSubjunctiveAs = row.subjunctive_corrects + subjunctive.numCorrect;
+const newConditionalQs = row.conditional_questions + conditional.numQuestions;
+const newConditionalAs = row.conditional_corrects + conditional.numCorrect;
 
 
     const { error: updateClassError } = await supabase
@@ -1158,8 +1184,8 @@ if (fetchClassError) {
     if (updateClassError) {
       console.error(`Update failed for class_id ${row.class_id}:`, updateClassError);
     }
-  }
-}
+  }}
+}}
 
   }
 };
