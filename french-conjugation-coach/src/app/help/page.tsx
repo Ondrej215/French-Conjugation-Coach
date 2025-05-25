@@ -36,12 +36,14 @@ export default function FAQAbout(){
                 <br></br>
                 <Link className={styles.helpLink} href='#classes' style={{color:'#3B6FBF', fontSize:isPortrait?'4vw':'2vw', marginTop:'3vh'}}>Classes</Link>
                 <br></br>
+                <Link className={styles.helpLink} href='#accounts' style={{color:'#3B6FBF', fontSize:isPortrait?'4vw':'2vw', marginTop:'3vh'}}>Accounts</Link>
+                <br></br>
 
                 <p id="verbDrills" style={{fontSize:isPortrait?'6vw':'3vw', marginTop:'6vh', fontWeight:'500'}}>Verb Drills</p>
                 <p>Before starting a drill, you will be shown a few options to set up how your drill will work.</p>
-<p>You can either choose a maximum number of questions by picking from the total questions dropdown, or select unlimited practice, which will continue until you decide to end the drill.</p>
-<p>You can also adjust the strict accents setting to decide whether incorrect accents will be marked wrong or ignored. If youre in a class that requires strict accents, disabling it will mean your drill stats will not be saved for that class. You can find more details in the Classes help section.</p>
-<p>You can also turn off leaderboard mode if you do not want the drill to count towards class stats. However, it will still count towards your personal account stats if you are signed in.</p>
+<p>You can either choose a maximum number of questions by picking from the total questions dropdown, or select unlimited questions, which will continue until you decide to end the drill.</p>
+<p>You can also adjust the ignore accent mistakes setting to decide whether incorrect accents will be marked wrong or ignored. If youre in a class that requires this to be turned off, enabling it will mean your drill stats will not be saved for that class. You can find more details in the Classes help section.</p>
+<p>You can also turn off save drill to class if you do not want the drill to count towards class stats. However, it will still count towards your personal account stats if you are signed in.</p>
 
 <br></br>
 
@@ -72,6 +74,16 @@ export default function FAQAbout(){
 <br></br>
 
 <p>In the class settings, teachers can also reset class stats and start a new leaderboard. When this happens, the student who is top of the leaderboard will be marked as the champion, and all stats will reset. This is useful for tracking new trends in tense accuracy or starting fresh at the beginning of a new term if the class is for a school.</p>
+
+<p id="accounts" style={{fontSize:isPortrait?'6vw':'3vw', marginTop:'6vh', fontWeight:'500'}}>Accounts</p>
+
+<p>When you are not signed in, you can complete drills however your results for the drill will not save. You can tell that you are not signed in if you see a red message popup on the drill configuration menu.</p>
+
+<p>To create an account you can either click on this popup or navigate to the profile page at the top of the page. You can then pick a username (not an email) and a password which you must remember to log back into your account.</p>
+<br></br>
+<p>When creating an account, you will have the choice between creating a student account or a teacher account. A student account will allow you to save progress from your completed drills, and view them in the profile page, and join classes set up by teachers.</p>
+<br></br>
+<p>A teacher account on the other hand allows you to create classes and monitor the progress of students in classes you created. A teacher account will however not allow you to track your own drill results.</p>
 
 <br></br><br></br><br></br><br></br>
             </div>

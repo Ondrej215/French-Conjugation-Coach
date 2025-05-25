@@ -96,50 +96,78 @@ export default function SignUp(){
         }
     }
 
-    async function signUpButton(){
+    async function signUpButton() {
         const username = usernameInput + '@frenchcoach.com';
-
-        if (passwordOneInput !== passwordTwoInput){
-            console.log('Passwords dont match')
+    
+        // Validate local part
+        const localPartRegex = /^[a-zA-Z0-9!#$%&'*+/=?^_`{|}~.-]+$/;
+    
+        const isValidLocalPart = () => {
+            if (!usernameInput) return false;
+            if (!localPartRegex.test(usernameInput)) return false;
+            if (usernameInput.startsWith('.') || usernameInput.endsWith('.')) return false;
+            for (let i = 0; i < usernameInput.length - 1; i++) {
+                if (usernameInput[i] === '.' && usernameInput[i + 1] === '.') return false;
+            }
+            return true;
+        };
+    
+        if (!isValidLocalPart()) {
+            setErrorMessage('Your username should be one word without spaces or special characters');
+            return;
+        }
+    
+        if (passwordOneInput !== passwordTwoInput) {
+            console.log('Passwords dont match');
             setErrorMessage('Your passwords do not match.');
             return;
         }
-
-        if (passwordOneInput.length < 6){
-            setErrorMessage('Your password must be atleast 6 characters.');
+    
+        if (passwordOneInput.length < 6) {
+            setErrorMessage('Your password must be at least 6 characters.');
             return;
         }
 
-        if (usernameInput.length < 2){
-            setErrorMessage('Your username must be atleast 2 characters.')
+        if (passwordOneInput.length > 20) {
+            setErrorMessage('Your password must be no more than 20 characters.');
+            return;
+        }
+    
+        if (usernameInput.length < 2) {
+            setErrorMessage('Your username must be at least 2 characters.');
             return;
         }
 
+        if (usernameInput.length > 20) {
+            setErrorMessage('Your username must be no more than 20 characters.');
+            return;
+        }
+    
         const { data, error } = await supabase
-        .from('TBLstudent')
-        .select('student_name')
-        .eq('student_name', usernameInput)
-        .maybeSingle();
-
-    if (data) {
-        setErrorMessage('That username is already taken.');
-        return;
-    }
-
-    if (error && error.code !== 'PGRST116') {
-        setErrorMessage('Something went wrong, try again later.');
-        console.error(error.message);
-        return;
-    }
-
+            .from('TBLstudent')
+            .select('student_name')
+            .eq('student_name', usernameInput)
+            .maybeSingle();
+    
+        if (data) {
+            setErrorMessage('That username is already taken.');
+            return;
+        }
+    
+        if (error && error.code !== 'PGRST116') {
+            setErrorMessage('Something went wrong, try again later.');
+            console.error(error.message);
+            return;
+        }
+    
         const password = passwordOneInput;
-
+    
         handleSignUp(username, password);
     }
 
     return(<>   
     <p style={{fontSize:isPortrait?'5vw':'2.5vw', fontWeight:'500', position:'absolute', left:'0vw', width:'100vw', textAlign:'center', top:'8vh'}}>Sign Up</p>
-    <div style={{background:'#272738', position:'absolute', left:isPortrait?'5vw':'30vw', top:'17vh', width:isPortrait?'90vw':'40vw', height:'53vh', borderRadius:'15px'}}>
+    <div style={{background:'#272738', position:'absolute', left:isPortrait?'5vw':'30vw', top:'17vh', width:isPortrait?'90vw':'40vw', height:'60vh', borderRadius:'15px'}}>
 
     <p style={{fontSize:isPortrait?'3vw':'1.5vw', position:'absolute', left:isPortrait?'3vw':'2vw', top:'5vh', height:'11vh', alignContent:'center'}}>Username</p>
     <input value={usernameInput} onChange={e => setUsernameInput(e.target.value)} style={{position:'absolute', left:isPortrait?'28vw':'15vw', top:'8vh', width:isPortrait?'55vw':'20vw', height:'8vh'}}/>
@@ -159,7 +187,8 @@ export default function SignUp(){
         <button onClick={() => {signUpButton()}} style={{position:'absolute', left:isPortrait?'50vw':'23vw', top:'43vh', width:isPortrait?'35vw':'13vw', height:'6vh', fontSize: isPortrait ? '4vw' : '2vw'}}>Confirm</button>
     </div>
 
-    <Link href='/log-in' className={styles.Link} style={{position:'absolute', top:'75vh', left:'0vw', width:'100vw', textAlign:'center', fontSize: isPortrait ? '4vw' : '2vw'}}>Log In Instead</Link>
+    <Link href='/log-in' className={styles.Link} style={{position:'absolute', top:'69vh', left:'0vw', width:'100vw', textAlign:'center', fontSize: isPortrait ? '4vw' : '2vw'}}>Log In Instead</Link>
+    <Link href='/help' className={styles.Link} style={{position:'absolute', top:'80vh', left:'0vw', width:'100vw', textAlign:'center', fontSize: isPortrait ? '4vw' : '2vw'}}>Help</Link>
 
     {errorMessage && (
   <p style={{

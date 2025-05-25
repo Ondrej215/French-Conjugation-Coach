@@ -5,6 +5,8 @@ import Image from "next/image";
 import ProgressBar from "../../components/ProgressBar";
 import { supabase } from "../../lib/supabaseClient";
 import { useSession } from '../../hooks/useSession';
+import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 export default function Home() {
   const [selectedNum, setSelectedNum] = useState<number>(10);
@@ -13,6 +15,7 @@ export default function Home() {
   const [strictAccents, setStrictAccents] = useState<boolean>(true);
   const [leaderboardMode, setLeaderboardMode] = useState<boolean>(true);
   const [menu, setMenu] = useState<string>('home');
+  const router = useRouter();
 
   const [progress, setProgress] = useState({
     points: 0,
@@ -1193,11 +1196,17 @@ const newConditionalAs = row.conditional_corrects + conditional.numCorrect;
     return (
       <div className={`${styles.container} ${styles.wrapper}`}>
 
-      {(session === null)?
-        <p style={{ fontSize: isPortrait ? '2vw' : '1vw', alignContent:'center', borderRadius:'10px', backgroundColor:'red', position:'absolute', top:isPortrait?'68vh':'75vh', left:isPortrait?'7vw':'15vw', height:isPortrait?'20vh':'10vh', width:isPortrait?'18vw':'20vw', textAlign:'center'}}>You are not logged in! Progress will not be saved.</p>:<></>}
+      {(session === null && menu === 'home')?
       
-      {(role === 'teacher')? <p style={{ fontSize: isPortrait ? '2vw' : '1vw', alignContent:'center', borderRadius:'10px', backgroundColor:'red', position:'absolute', top:isPortrait?'68vh':'75vh', left:isPortrait?'7vw':'15vw', height:isPortrait?'20vh':'10vh', width:isPortrait?'18vw':'20vw', textAlign:'center'}}>Your progress will not be saved on a teacher account.</p>:<></>}
+        <button onClick={() => {router.push('/log-in')}} className='redButton' style={{ padding:'0px 0px', border: '6px solid #8B0000', fontSize: isPortrait ? '2.6vw' : '1.3vw', alignContent:'center', borderRadius:'10px', backgroundColor:'red', position:'absolute', top:isPortrait?'60vh':'65vh', left:isPortrait?'7vw':'15vw', height:isPortrait?'27vh':'20vh', width:isPortrait?'22vw':'20vw', textAlign:'center'}}>You are not logged in! Progress will not be saved.<br></br><strong>Click here to sign in.</strong></button>:<></>}
+      
+      {(role === 'teacher' && menu === 'home')? <button onClick={() => {router.push('/classes')}} className='redButton' style={{ padding:'0px 0px', border: '6px solid #8B0000', fontSize: isPortrait ? '2.6vw' : '1.3vw', alignContent:'center', borderRadius:'10px', backgroundColor:'red', position:'absolute', top:isPortrait?'60vh':'65vh', left:isPortrait?'7vw':'15vw', height:isPortrait?'27vh':'20vh', width:isPortrait?'22vw':'20vw', textAlign:'center'}}>Your progress will not be saved on a teacher account.<br></br><strong>Click here to view your classes.</strong></button>:<></>}
           
+
+      {(session === null && menu !== 'home') && <p style={{position:'absolute', backgroundColor:'red', top:isPortrait?'72vh':'80vh', left:isPortrait?'5vw':'15vw', width:isPortrait?'18vw':'22vw', height:isPortrait?'22vh':'13vh', textAlign:'center', borderRadius:'15px', alignContent:'center', fontSize:isPortrait?'2.4vw':'1.2vw'}}>You are not logged in. Progress will not be saved!</p>}
+      
+      {(role === 'teacher' && menu !== 'home') && <p style={{position:'absolute', backgroundColor:'red', top:isPortrait?'72vh':'80vh', left:isPortrait?'5vw':'15vw', width:isPortrait?'18vw':'22vw', height:isPortrait?'22vh':'13vh', textAlign:'center', borderRadius:'15px', alignContent:'center', fontSize:isPortrait?'2.4vw':'1.2vw'}}>Your progress will not save on a teacher account!</p>}
+      
       {menu === 'home' && (
         <div className={styles.background}>
           <p style={{fontSize:isPortrait?'5vw':'2.5vw'}}>Verb Conjugation Drill</p>
@@ -1243,7 +1252,7 @@ const newConditionalAs = row.conditional_corrects + conditional.numCorrect;
               className="peer hidden"
             />
             <span style={{fontSize:isPortrait?'3.8vw':'1.8vw'}} className="w-5 h-5 mr-2 border-2 border-white rounded-sm peer-checked:bg-blue-500 peer-checked:border-blue-500 transition-colors"></span>
-            Unlimited Practice
+            Unlimited Questions
           </label>
       
           <br />
@@ -1251,12 +1260,12 @@ const newConditionalAs = row.conditional_corrects + conditional.numCorrect;
           <label style={{fontSize:isPortrait?'3.8vw':'1.8vw'}} className="flex items-center justify-center text-white text-[isPortrait ? '2.8vw' : '1.4vw'] mr-4 cursor-pointer">
             <input
               type="checkbox"
-              checked={strictAccents}
-              onChange={(e) => setStrictAccents(e.target.checked)}
+              checked={!strictAccents}
+              onChange={(e) => setStrictAccents(!e.target.checked)}
               className="peer hidden"
             />
             <span className="w-5 h-5 mr-2 border-2 border-white rounded-sm peer-checked:bg-blue-500 peer-checked:border-blue-500 transition-colors"></span>
-            Strict Accents
+            Ignore Accent Mistakes
           </label>
       
           <br />
@@ -1269,7 +1278,7 @@ const newConditionalAs = row.conditional_corrects + conditional.numCorrect;
               className="peer hidden"
             />
             <span className="w-5 h-5 mr-2 border-2 border-white rounded-sm peer-checked:bg-blue-500 peer-checked:border-blue-500 transition-colors"></span>
-            Leaderboard Mode
+            Save Drill To Class
           </label>
       
           <br />
@@ -1290,6 +1299,8 @@ const newConditionalAs = row.conditional_corrects + conditional.numCorrect;
           >
             Start
           </button>
+
+          <Link href="/help" className={styles.Link} style={{position:'absolute', left:isPortrait?'75vw':'65vw', top:isPortrait?'78vh':'76.5vh', backgroundColor:'#1E1E28', borderRadius:'10px', padding:'0.6vh 1.5vw'}}>Help</Link>
         </div>
       )}
       
@@ -1347,12 +1358,13 @@ const newConditionalAs = row.conditional_corrects + conditional.numCorrect;
                 height: isPortrait ? '8vh' : "12vh",
                 left: isPortrait ? "20vw" : "52vw",
                 top: isPortrait ? "60vh" : "44vh",
-                fontSize: isPortrait ? '3.2vw' : '1.6vw'
+                fontSize: isPortrait ? '3.2vw' : '1.6vw',
               }}
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
               disabled={inputDisabled}
               onMouseEnter={handleMouseEnter}
+              placeholder='Enter conjugation here...'
             />
       
             {(progress.questionsAnswered < selectedNum || unlimitedPractice)?
@@ -1446,7 +1458,7 @@ const newConditionalAs = row.conditional_corrects + conditional.numCorrect;
                   borderRadius: '180px',
                   padding: '0rem 0rem',
                   backgroundColor: '#1852B1',
-                  fontSize: isPortrait ? '2vw' : '1vw'
+                  fontSize: isPortrait ? '3.4vw' : '1.7vw'
                 }}
               >
                 {accent}

@@ -72,7 +72,7 @@ export default function LogIn(){
             left: isPortrait ? '5vw' : '30vw',
             top: '17vh',
             width: isPortrait ? '90vw' : '40vw',
-            height: '53vh',
+            height: '60vh',
             borderRadius: '15px',
           }}
         >
@@ -148,7 +148,7 @@ export default function LogIn(){
           style={{
             fontSize: isPortrait ? '4vw' : '2vw', // Adjusted font size based on isPortrait
             position: 'absolute',
-            top: '75vh',
+            top: '69vh',
             left: '0vw',
             width: '100vw',
             textAlign: 'center',
@@ -156,6 +156,7 @@ export default function LogIn(){
         >
           Sign Up Instead
         </Link>
+        <Link href='/help' className={styles.Link} style={{position:'absolute', top:'80vh', left:'0vw', width:'100vw', textAlign:'center', fontSize: isPortrait ? '4vw' : '2vw'}}>Help</Link>
     
         {errorMessage && (
           <p
