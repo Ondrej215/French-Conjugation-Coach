@@ -1203,10 +1203,12 @@ const newConditionalAs = row.conditional_corrects + conditional.numCorrect;
       {(role === 'teacher' && menu === 'home')? <button onClick={() => {router.push('/classes')}} className='redButton' style={{ padding:'0px 0px', border: '6px solid #8B0000', fontSize: isPortrait ? '2.6vw' : '1.3vw', alignContent:'center', borderRadius:'10px', backgroundColor:'red', position:'absolute', top:isPortrait?'60vh':'65vh', left:isPortrait?'7vw':'15vw', height:isPortrait?'27vh':'20vh', width:isPortrait?'22vw':'20vw', textAlign:'center'}}>Your progress will not be saved on a teacher account.<br></br><strong>Click here to view your classes.</strong></button>:<></>}
           
 
-      {(session === null && menu !== 'home') && <p style={{position:'absolute', backgroundColor:'red', top:isPortrait?'72vh':'80vh', left:isPortrait?'5vw':'15vw', width:isPortrait?'18vw':'22vw', height:isPortrait?'22vh':'13vh', textAlign:'center', borderRadius:'15px', alignContent:'center', fontSize:isPortrait?'2.4vw':'1.2vw'}}>You are not logged in. Progress will not be saved!</p>}
+      {(session === null && menu !== 'home') && <p style={{position:'absolute', backgroundColor:'red', top:isPortrait?'69vh':'80vh', left:isPortrait?'5vw':'15vw', width:isPortrait?'18vw':'22vw', height:isPortrait?'22vh':'13vh', textAlign:'center', borderRadius:'15px', alignContent:'center', fontSize:isPortrait?'2.4vw':'1.2vw'}}>You are not logged in. Progress will not be saved!</p>}
       
-      {(role === 'teacher' && menu !== 'home') && <p style={{position:'absolute', backgroundColor:'red', top:isPortrait?'72vh':'80vh', left:isPortrait?'5vw':'15vw', width:isPortrait?'18vw':'22vw', height:isPortrait?'22vh':'13vh', textAlign:'center', borderRadius:'15px', alignContent:'center', fontSize:isPortrait?'2.4vw':'1.2vw'}}>Your progress will not save on a teacher account!</p>}
+      {(role === 'teacher' && menu !== 'home') && <p style={{position:'absolute', backgroundColor:'red', top:isPortrait?'69vh':'80vh', left:isPortrait?'5vw':'15vw', width:isPortrait?'18vw':'22vw', height:isPortrait?'22vh':'13vh', textAlign:'center', borderRadius:'15px', alignContent:'center', fontSize:isPortrait?'2.4vw':'1.2vw'}}>Your progress will not save on a teacher account!</p>}
       
+      {role === 'student' && <Link href="/account" className={styles.Link} style={{position:'absolute', left:isPortrait?'10vw':'25vw', top:isPortrait?'78vh':'76.5vh', backgroundColor:'#1E1E28', borderRadius:'10px', padding:'0.6vh 1.5vw', fontSize:isPortrait?'4vw':'2vw', height:'8vh', alignContent:'center'}}>Your Stats</Link>}
+
       {menu === 'home' && (
         <div className={styles.background}>
           <p style={{fontSize:isPortrait?'5vw':'2.5vw'}}>Verb Conjugation Drill</p>
@@ -1300,7 +1302,7 @@ const newConditionalAs = row.conditional_corrects + conditional.numCorrect;
             Start
           </button>
 
-          <Link href="/help" className={styles.Link} style={{position:'absolute', left:isPortrait?'75vw':'65vw', top:isPortrait?'78vh':'76.5vh', backgroundColor:'#1E1E28', borderRadius:'10px', padding:'0.6vh 1.5vw'}}>Help</Link>
+          <Link href="/help" className={styles.Link} style={{position:'absolute', left:isPortrait?'71vw':'65vw', top:isPortrait?'78vh':'76.5vh', backgroundColor:'#1E1E28', borderRadius:'10px', padding:'0.6vh 1.5vw'}}>Help</Link>
         </div>
       )}
       
