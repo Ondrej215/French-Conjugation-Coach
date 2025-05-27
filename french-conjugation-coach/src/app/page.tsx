@@ -48,6 +48,30 @@ export default function Home() {
   const [incorrectHeight, setIncorrectHeight] = useState<number>(1);
   const [capsLockOn, setCapsLockOn] = useState<boolean>(false);
   const [endWarning, setEndWarning] = useState<boolean>(false);
+  const [tenseSelection, setTenseSelection] = useState<boolean>(false);
+  const [showTenseWarning, setShowTenseWarning] = useState(false);
+
+  const [practiceTenses, setPracticeTenses] = useState<{
+    present: boolean;
+    imperfect: boolean;
+    conditional: boolean;
+    past: boolean;
+    participle: boolean;
+    future: boolean;
+    subjunctive: boolean;
+    imperative: boolean;
+  }>({
+    present: true,
+    imperfect: true,
+    conditional: true,
+    past: true,
+    participle: true,
+    future: true,
+    subjunctive: true,
+    imperative: true,
+  });
+  const hasAnyTenseSelected = Object.values(practiceTenses).some(val => val);
+
   const { session, loading, role, accountInfo } = useSession();
 
   const [mostQuestions, setMostQuestions] = useState({ name: '', value: 0 });
@@ -660,30 +684,46 @@ useEffect(() => {
   };
 
   function nextQuestion() {
-
     setCheckButton(!checkButton);
-    if (!checkButton){
-
-        // clear verb input
-        setInputValue("");
-        setInputDisabled(false);
-        setAnswerMessage('');
-
-        if (inputRef.current) {
-            inputRef.current.focus();
-        }
-
-        setCorrectHeight(1);
-        setIncorrectHeight(1);
-
-        const numVerbs = allData.length;
-
-        // decides which verb to use from shuffledInfinitives, goes through the list then repeats
-        // if repeating list then it is reshuffled
-        const index = progress.questionsAnswered % numVerbs;
-
-        const randomTense = getRandomElement(tenses);
-        let randomPronoun: string;
+  
+    if (!checkButton) {
+      setInputValue("");
+      setInputDisabled(false);
+      setAnswerMessage("");
+  
+      if (inputRef.current) {
+        inputRef.current.focus();
+      }
+  
+      setCorrectHeight(1);
+      setIncorrectHeight(1);
+  
+      const numVerbs = allData.length;
+      const index = progress.questionsAnswered % numVerbs;
+  
+      // STEP 1: Filter tenses based on practiceTenses object
+      const enabledTenses = tenses.filter((tense) => {
+        // Map string tense to lowercase keys used in practiceTenses
+        const key = tense
+          .toLowerCase()
+          .replace(" simple", "")         // "Future Simple" → "future"
+          .replace(" present", "")        // "Present Participle" → "participle"
+          .replace(" past", "")           // "Past Participle" → "participle"
+          .trim();
+  
+        return practiceTenses[key as keyof typeof practiceTenses];
+      });
+  
+      // STEP 2: If no tenses enabled, fallback or return
+      if (enabledTenses.length === 0) {
+        console.warn("No tenses selected!");
+        return;
+      }
+  
+      // STEP 3: Pick a random enabled tense
+      const randomTense = getRandomElement(enabledTenses);
+  
+      let randomPronoun: string;
 
         if (index === 0){
             const shuffled = [...allData].sort(() => Math.random() - 0.5);
@@ -1193,6 +1233,15 @@ const newConditionalAs = row.conditional_corrects + conditional.numCorrect;
   }
 };
 
+async function updateTenseSelection(){
+  if (hasAnyTenseSelected) {
+    setTenseSelection(false);
+    setShowTenseWarning(false);
+  }else{
+    setShowTenseWarning(true);
+  }
+}
+
     return (
       <div className={`${styles.container} ${styles.wrapper}`}>
 
@@ -1207,7 +1256,7 @@ const newConditionalAs = row.conditional_corrects + conditional.numCorrect;
       
       {(role === 'teacher' && menu !== 'home') && <p style={{position:'absolute', backgroundColor:'red', top:isPortrait?'69vh':'80vh', left:isPortrait?'5vw':'15vw', width:isPortrait?'18vw':'22vw', height:isPortrait?'22vh':'13vh', textAlign:'center', borderRadius:'15px', alignContent:'center', fontSize:isPortrait?'2.4vw':'1.2vw'}}>Your progress will not save on a teacher account!</p>}
       
-      {role === 'student' && <Link href="/account" className={styles.Link} style={{position:'absolute', left:isPortrait?'10vw':'25vw', top:isPortrait?'78vh':'76.5vh', backgroundColor:'#1E1E28', borderRadius:'10px', padding:'0.6vh 1.5vw', fontSize:isPortrait?'4vw':'2vw', height:'8vh', alignContent:'center'}}>Your Stats</Link>}
+      {(role === 'student' && menu === 'home') && <Link href="/account" className={styles.Link} style={{position:'absolute', left:isPortrait?'10vw':'25vw', top:isPortrait?'78vh':'76.5vh', backgroundColor:'#1E1E28', borderRadius:'10px', padding:'0.6vh 1.5vw', fontSize:isPortrait?'4vw':'2vw', height:'8vh', alignContent:'center'}}>Your Stats</Link>}
 
       {menu === 'home' && (
         <div className={styles.background}>
@@ -1243,10 +1292,13 @@ const newConditionalAs = row.conditional_corrects + conditional.numCorrect;
               </span>
             </div>
           </div>
+
+          <span style={{fontSize:isPortrait?'3.8vw':'1.8vw'}}>
+                <button style={{fontSize:isPortrait?'3.8vw':'1.8vw', backgroundColor:'#254596', marginTop:isPortrait?'1vh':'5vh'}} onClick={() => {setTenseSelection(true)}}>Pick Tenses</button>
+          </span>
       
-          <br />
       
-          <label style={{fontSize:isPortrait?'3.8vw':'1.8vw'}} className="flex items-center justify-center text-white text-[isPortrait ? '2.8vw' : '1.4vw'] mr-4 cursor-pointer">
+          <label style={{fontSize:isPortrait?'3.8vw':'1.8vw', marginTop:isPortrait?'4vh':'2vh'}} className="flex items-center justify-center text-white text-[isPortrait ? '2.8vw' : '1.4vw'] mr-4 cursor-pointer">
             <input
               type="checkbox"
               checked={unlimitedPractice}
@@ -1257,9 +1309,8 @@ const newConditionalAs = row.conditional_corrects + conditional.numCorrect;
             Unlimited Questions
           </label>
       
-          <br />
       
-          <label style={{fontSize:isPortrait?'3.8vw':'1.8vw'}} className="flex items-center justify-center text-white text-[isPortrait ? '2.8vw' : '1.4vw'] mr-4 cursor-pointer">
+          <label style={{fontSize:isPortrait?'3.8vw':'1.8vw', marginTop:isPortrait?'4vh':'2vh'}} className="flex items-center justify-center text-white text-[isPortrait ? '2.8vw' : '1.4vw'] mr-4 cursor-pointer">
             <input
               type="checkbox"
               checked={!strictAccents}
@@ -1270,9 +1321,8 @@ const newConditionalAs = row.conditional_corrects + conditional.numCorrect;
             Ignore Accent Mistakes
           </label>
       
-          <br />
       
-          <label style={{fontSize:isPortrait?'3.8vw':'1.8vw'}} className="flex items-center justify-center text-white text-[isPortrait ? '2.8vw' : '1.4vw'] mr-4 cursor-pointer">
+          <label style={{fontSize:isPortrait?'3.8vw':'1.8vw', marginTop:isPortrait?'4vh':'2vh'}} className="flex items-center justify-center text-white text-[isPortrait ? '2.8vw' : '1.4vw'] mr-4 cursor-pointer">
             <input
               type="checkbox"
               checked={leaderboardMode}
@@ -1538,6 +1588,145 @@ const newConditionalAs = row.conditional_corrects + conditional.numCorrect;
         <br></br>
       <button style={{position:'absolute', top:'58vh', left:isPortrait?'26vw':'36vw', width:isPortrait?'20vw':'11vw', height:isPortrait?'7vh':'9vh', padding:'0px 0px'}} onClick={() => {setMenu('end'); setEndWarning(false); updateTenseStats();}}>Yes</button>
       <button style={{position:'absolute', top:'58vh', left:isPortrait?'54vw':'53vw', width:isPortrait?'20vw':'11vw', height:isPortrait?'7vh':'9vh', padding:'0px 0px'}} onClick={() => setEndWarning(false)}>Cancel</button>
+      </div>
+      </div>)
+      :<></>}
+
+{tenseSelection?(<div 
+      style={{
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        width: '100vw',
+        height: '100vh',
+        backdropFilter: 'blur(8px)',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        zIndex: 50,
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center'
+      }}
+      >
+      <div 
+        style={{
+          height: '80vh',
+          width: isPortrait ? '70vw' : '40vw',
+          backgroundColor: '#303142',
+          borderRadius: '15px',
+          padding: '1rem',
+          zIndex: 60
+        }}
+      >
+          <br></br>
+        <p style={{ fontSize: isPortrait ? '3.2vw' : '1.6vw', textAlign: 'center', fontWeight:'600'}}>Pick which tenses you would like to practice.</p>
+        <label style={{fontSize:isPortrait?'3.4vw':'1.7vw', marginTop:isPortrait?'3vh':'2vh'}} className="flex items-center justify-center text-white text-[isPortrait ? '2.8vw' : '1.4vw'] mr-4 cursor-pointer">
+            <input
+              type="checkbox"
+              checked={practiceTenses.present}
+              onChange={(e) => setPracticeTenses(prev => ({
+                ...prev,
+                present: e.target.checked
+              }))}
+              className="peer hidden"
+            />
+            <span className="w-5 h-5 mr-2 border-2 border-white rounded-sm peer-checked:bg-blue-500 peer-checked:border-blue-500 transition-colors"></span>
+            Present
+          </label>
+          <label style={{fontSize:isPortrait?'3.4vw':'1.7vw', marginTop:isPortrait?'2vh':'1vh'}} className="flex items-center justify-center text-white text-[isPortrait ? '2.8vw' : '1.4vw'] mr-4 cursor-pointer">
+            <input
+              type="checkbox"
+              checked={practiceTenses.imperfect}
+              onChange={(e) => setPracticeTenses(prev => ({
+                ...prev,
+                imperfect: e.target.checked
+              }))}
+              className="peer hidden"
+            />
+            <span className="w-5 h-5 mr-2 border-2 border-white rounded-sm peer-checked:bg-blue-500 peer-checked:border-blue-500 transition-colors"></span>
+            Imperfect
+          </label>
+          <label style={{fontSize:isPortrait?'3.4vw':'1.7vw', marginTop:isPortrait?'2vh':'1vh'}} className="flex items-center justify-center text-white text-[isPortrait ? '2.8vw' : '1.4vw'] mr-4 cursor-pointer">
+            <input
+              type="checkbox"
+              checked={practiceTenses.past}
+              onChange={(e) => setPracticeTenses(prev => ({
+                ...prev,
+                past: e.target.checked
+              }))}
+              className="peer hidden"
+            />
+            <span className="w-5 h-5 mr-2 border-2 border-white rounded-sm peer-checked:bg-blue-500 peer-checked:border-blue-500 transition-colors"></span>
+            Past Participle
+          </label>
+          <label style={{fontSize:isPortrait?'3.4vw':'1.7vw', marginTop:isPortrait?'2vh':'1vh'}} className="flex items-center justify-center text-white text-[isPortrait ? '2.8vw' : '1.4vw'] mr-4 cursor-pointer">
+            <input
+              type="checkbox"
+              checked={practiceTenses.future}
+              onChange={(e) => setPracticeTenses(prev => ({
+                ...prev,
+                future: e.target.checked
+              }))}
+              className="peer hidden"
+            />
+            <span className="w-5 h-5 mr-2 border-2 border-white rounded-sm peer-checked:bg-blue-500 peer-checked:border-blue-500 transition-colors"></span>
+            Future Simple
+          </label>
+          <label style={{fontSize:isPortrait?'3.4vw':'1.7vw', marginTop:isPortrait?'2vh':'1vh'}} className="flex items-center justify-center text-white text-[isPortrait ? '2.8vw' : '1.4vw'] mr-4 cursor-pointer">
+            <input
+              type="checkbox"
+              checked={practiceTenses.participle}
+              onChange={(e) => setPracticeTenses(prev => ({
+                ...prev,
+                participle: e.target.checked
+              }))}
+              className="peer hidden"
+            />
+            <span className="w-5 h-5 mr-2 border-2 border-white rounded-sm peer-checked:bg-blue-500 peer-checked:border-blue-500 transition-colors"></span>
+            Present Participle
+          </label>
+          <label style={{fontSize:isPortrait?'3.4vw':'1.7vw', marginTop:isPortrait?'2vh':'1vh'}} className="flex items-center justify-center text-white text-[isPortrait ? '2.8vw' : '1.4vw'] mr-4 cursor-pointer">
+            <input
+              type="checkbox"
+              checked={practiceTenses.conditional}
+              onChange={(e) => setPracticeTenses(prev => ({
+                ...prev,
+                conditional: e.target.checked
+              }))}
+              className="peer hidden"
+            />
+            <span className="w-5 h-5 mr-2 border-2 border-white rounded-sm peer-checked:bg-blue-500 peer-checked:border-blue-500 transition-colors"></span>
+            Conditional
+          </label>
+          <label style={{fontSize:isPortrait?'3.4vw':'1.7vw', marginTop:isPortrait?'2vh':'1vh'}} className="flex items-center justify-center text-white text-[isPortrait ? '2.8vw' : '1.4vw'] mr-4 cursor-pointer">
+            <input
+              type="checkbox"
+              checked={practiceTenses.subjunctive}
+              onChange={(e) => setPracticeTenses(prev => ({
+                ...prev,
+                subjunctive: e.target.checked
+              }))}
+              className="peer hidden"
+            />
+            <span className="w-5 h-5 mr-2 border-2 border-white rounded-sm peer-checked:bg-blue-500 peer-checked:border-blue-500 transition-colors"></span>
+            Subjunctive
+          </label>
+          <label style={{fontSize:isPortrait?'3.4vw':'1.7vw', marginTop:isPortrait?'2vh':'1vh'}} className="flex items-center justify-center text-white text-[isPortrait ? '2.8vw' : '1.4vw'] mr-4 cursor-pointer">
+            <input
+              type="checkbox"
+              checked={practiceTenses.imperative}
+              onChange={(e) => setPracticeTenses(prev => ({
+                ...prev,
+                imperative: e.target.checked
+              }))}
+              className="peer hidden"
+            />
+            <span className="w-5 h-5 mr-2 border-2 border-white rounded-sm peer-checked:bg-blue-500 peer-checked:border-blue-500 transition-colors"></span>
+            Imperative
+          </label>
+
+              {showTenseWarning && <p style={{backgroundColor:'red', position:'absolute', top:'60vh', height:'15vh', left:isPortrait?'65vw':'60vw', width:isPortrait?'18vw':'8vw', borderRadius:'10px', textAlign:'center', alignContent:'center', fontSize:isPortrait?'2.4vw':'1.2vw'}}>You must select at least one tense!</p>}
+
+      <button style={{position:'absolute', top:'78vh', left:isPortrait?'30vw':'42.5vw', width:isPortrait?'40vw':'15vw', height:isPortrait?'7vh':'9vh', padding:'0px 0px'}} onClick={() => {updateTenseSelection()}}>Confirm</button>
       </div>
       </div>)
       :<></>}
