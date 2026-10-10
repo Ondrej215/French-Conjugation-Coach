@@ -9,3 +9,26 @@ Learn French conjugations by practicing verbs endings. Includes selected practic
 - Student accounts for stats tracking long term to spot weaknesses and to build up your points total
 - Teacher accounts and classes for tracking the performance of a class overall
 - Live points leaderboards in each class
+
+## Running locally
+
+**Prerequisites**: Node.js and npm
+
+**Setup**: Clone the repository and enter the application directory:
+
+```bash
+git clone https://github.com/Ondrej215/French-Conjugation-Coach.git
+cd French-Conjugation-Coach/french-conjugation-coach
+```
+
+Install the dependencies:
+```bash
+npm install
+```
+Start the development server:
+```bash
+npm run dev
+```
+Open http://localhost:3000 in your browser.
+
+Configuration: Depending on the features you want to use, you may need to configure Supabase environment variables before running the application.
