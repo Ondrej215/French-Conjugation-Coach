@@ -33,7 +33,7 @@ Open http://localhost:3000 in your browser.
 
 Configuration: Depending on the features you want to use, you may need to configure Supabase environment variables before running the application.
 
-##How It Works
+## How It Works
 All conjugations are stored in an online database hosted by supabase alongside account, class and leaderboard data. This ensures new conjugations can be added at any time.
 In order to minimise the amount of data stored in the database, each verb is assigned a group representing its conjugation pattern, these patterns were designed by me to capture the conjugations of the vast majority of French verbs. Any irregularities in the verb's conjugations can then be added when needed.
 RLS and policies are used to ensure that students do not edit class related data that only teachers should be able to access, and that no user can configure verb data.
